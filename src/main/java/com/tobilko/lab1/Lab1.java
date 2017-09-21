@@ -4,8 +4,8 @@ import com.tobilko.util.RandomGenerator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+
 import java.util.Random;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  */
 public class Lab1 {
 
-    private final int VECTOR_SIZE = 100_000_00;
+    private final int VECTOR_SIZE = 100_000_000;
     private final int THREAD_LIMIT = 10;
 
     @SneakyThrows
@@ -73,7 +73,7 @@ public class Lab1 {
 
         @Override
         public double[] generate() {
-            return generator.doubles(VECTOR_SIZE).toArray();
+            return generator.doubles(VECTOR_SIZE, 0, 1000).toArray();
         }
 
     }
@@ -101,17 +101,31 @@ public class Lab1 {
         final Lab1 lab = new Lab1();
         final double[] vector = lab.new RandomDoubleArrayGenerator().generate();
 
-        printResultsForMeasurement(() -> lab.measureEuclideanNormCalculationWithSingleThread(vector), System.currentTimeMillis());
-        System.out.println();
-        printResultsForMeasurement(() -> lab.measureEuclideanNormCalculationWithMultipleThreads(vector), System.currentTimeMillis());
+        long startingTime = System.currentTimeMillis();
+        double r1 = lab.measureEuclideanNormCalculationWithSingleThread(vector);
+        long t1 = System.currentTimeMillis() - startingTime;
 
-        System.out.println();
-        System.out.println("the numbers of cores = " + Runtime.getRuntime().availableProcessors());
+        startingTime = System.currentTimeMillis();
+        double r2 = lab.measureEuclideanNormCalculationWithMultipleThreads(vector);
+        long t2 = System.currentTimeMillis() - startingTime;
+
+        System.out.println("t1 = " + t1 + ", t2 = " + t2);
+
+        double accelerationFactor = calculateAccelerationFactor(t1, t2);
+        System.out.println("the acceleration factor = " + accelerationFactor);
+
+        int cores = Runtime.getRuntime().availableProcessors();
+        double efficiencyFactor = calculateEfficiencyFactor(accelerationFactor, cores);
+        System.out.println("the efficiency factor = " + efficiencyFactor);
+        System.out.println("the numbers of cores = " + cores);
     }
 
-    private static void printResultsForMeasurement(Supplier<Double> measurement, long startingTimeMillis) {
-        System.out.println("result = " + measurement.get());
-        System.out.println("time = " + (System.currentTimeMillis() - startingTimeMillis));
+    private static double calculateAccelerationFactor(double t1, double tN) {
+        return t1 / tN;
+    }
+
+    private static double calculateEfficiencyFactor(double sN, int cores) {
+        return sN / cores;
     }
 
 }
