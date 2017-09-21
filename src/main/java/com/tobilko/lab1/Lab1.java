@@ -1,128 +1,117 @@
 package com.tobilko.lab1;
 
-import com.tobilko.configuration.RandomGenerator;
-import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.runner.RunnerException;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import com.tobilko.util.RandomGenerator;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import java.util.Random;
-
-import static com.tobilko.configuration.JMHConfiguration.startWithDefaultBenchmarkConfigurationByClass;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * Created by Andrew Tobilko on 9/16/17.
  */
 public class Lab1 {
 
-    private static class LabData {
+    private final int VECTOR_SIZE = 100_000_00;
+    private final int THREAD_LIMIT = 10;
 
-        public static final int VECTOR_SIZE = 100_000_000;
-        public static final int THREAD_LIMIT = 10;
-        public static final double[] VECTOR = RandomDoubleArrayGenerator.INSTANCE.generate();
+    @SneakyThrows
+    public double measureEuclideanNormCalculationWithSingleThread(double[] vector) {
+        PartialResultCalculator calculator = new PartialResultCalculator(vector, 0, vector.length);
 
+        calculator.run();
+        calculator.join();
+
+        return calculateEuclideanNormFromSum(calculator.getResult());
     }
 
-    @Benchmark
-    @BenchmarkMode(Mode.AverageTime)
-    @Measurement(iterations = 1)
-    @Warmup(iterations = 0)
-    public void measureEuclideanNormCalculationWithSingleThread() {
-        System.out.println(LabData.VECTOR);
+    @SneakyThrows
+    public double measureEuclideanNormCalculationWithMultipleThreads(double[] vector) {
+        PartialResultCalculator[] calculators = new PartialResultCalculator[THREAD_LIMIT];
 
-        double sum = 0;
-        for (double v : LabData.VECTOR) {
-            sum += Math.pow(v, 2);
-        }
-
-        System.out.println("result* = " + Math.sqrt(sum));
-    }
-
-    @Benchmark
-    @BenchmarkMode(Mode.AverageTime)
-    @Measurement(iterations = 1)
-    @Warmup(iterations = 0)
-    public void measureEuclideanNormCalculationWithMultipleThreads() throws InterruptedException {
-        PartialSumCalculator[] calculators = new PartialSumCalculator[LabData.THREAD_LIMIT];
-
-        System.out.println(LabData.VECTOR);
-
+        // assign
         for (int i = 0; i < calculators.length; i++) {
-            (calculators[i] = new PartialSumCalculator(
-                    LabData.VECTOR,
+            calculators[i] = new PartialResultCalculator(
+                    vector,
                     calculateStartingIndexForI(i),
-                    calculateEndingIndexForI(i))
-            ).run();
-
-            calculators[i].join();
+                    calculateEndingIndexForI(i)
+            );
         }
 
-        double sum = 0;
-        for (PartialSumCalculator calculator : calculators) {
-            sum += calculator.getSum();
+        // run
+        for (PartialResultCalculator calculator : calculators) {
+            calculator.run();
         }
 
-        System.out.println("p.result = " + Math.sqrt(sum));
+        // join
+        for (PartialResultCalculator calculator : calculators) {
+            calculator.join();
+        }
 
+        // get an overall sum
+        double sum = Stream.of(calculators).mapToDouble(PartialResultCalculator::getResult).sum();
+
+        return calculateEuclideanNormFromSum(sum);
+    }
+
+    private double calculateEuclideanNormFromSum(double sum) {
+        return Math.sqrt(sum);
     }
 
     private int calculateStartingIndexForI(int i) {
-        return LabData.VECTOR_SIZE / LabData.THREAD_LIMIT * i;
+        return VECTOR_SIZE / THREAD_LIMIT * i;
     }
 
     private int calculateEndingIndexForI(int i) {
-        return LabData.VECTOR_SIZE / LabData.THREAD_LIMIT * (i + 1);
+        return VECTOR_SIZE / THREAD_LIMIT * (i + 1);
     }
 
-    private static class RandomDoubleArrayGenerator implements RandomGenerator<double[]> {
-
-        public static final RandomDoubleArrayGenerator INSTANCE = new RandomDoubleArrayGenerator(LabData.VECTOR_SIZE);
+    private class RandomDoubleArrayGenerator implements RandomGenerator<double[]> {
 
         private final Random generator = new Random();
 
-        private final long arraySize;
-
-        public RandomDoubleArrayGenerator(long arraySize) {
-            this.arraySize = arraySize;
-        }
-
         @Override
         public double[] generate() {
-            return generator.doubles(arraySize).toArray();
+            return generator.doubles(VECTOR_SIZE).toArray();
         }
 
     }
 
-    private class PartialSumCalculator extends Thread {
+    @RequiredArgsConstructor
+    private class PartialResultCalculator extends Thread {
 
         private final double[] vector;
         private final int startingIndex;
         private final int endingIndex;
 
-        private double sum;
-
-        public PartialSumCalculator(double[] vector, int startingIndex, int endingIndex) {
-            this.vector = vector;
-            this.startingIndex = startingIndex;
-            this.endingIndex = endingIndex;
-        }
+        @Getter
+        private double result;
 
         @Override
         public void run() {
-            for (int i = startingIndex; i < endingIndex; ++i) {
-                sum += vector[i];
+            for (int i = startingIndex; i < endingIndex; ) {
+                result += vector[i++];
             }
-        }
-
-        public double getSum() {
-            return sum;
         }
 
     }
 
-    public static void main(String[] args) throws RunnerException {
-        startWithDefaultBenchmarkConfigurationByClass(Lab1.class);
+    public static void main(String[] args) throws Exception {
+        final Lab1 lab = new Lab1();
+        final double[] vector = lab.new RandomDoubleArrayGenerator().generate();
+
+        printResultsForMeasurement(() -> lab.measureEuclideanNormCalculationWithSingleThread(vector), System.currentTimeMillis());
+        System.out.println();
+        printResultsForMeasurement(() -> lab.measureEuclideanNormCalculationWithMultipleThreads(vector), System.currentTimeMillis());
+
+        System.out.println();
+        System.out.println("the numbers of cores = " + Runtime.getRuntime().availableProcessors());
+    }
+
+    private static void printResultsForMeasurement(Supplier<Double> measurement, long startingTimeMillis) {
+        System.out.println("result = " + measurement.get());
+        System.out.println("time = " + (System.currentTimeMillis() - startingTimeMillis));
     }
 
 }
