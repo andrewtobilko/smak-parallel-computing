@@ -13,8 +13,8 @@ import java.util.stream.Stream;
  */
 public class Lab1 {
 
-    private final int VECTOR_SIZE = 100_000_000;
-    private final int THREAD_LIMIT = 10;
+    private final int VECTOR_SIZE = 200_000_000;
+    private final int THREAD_LIMIT = 4;
 
     @SneakyThrows
     public double measureEuclideanNormCalculationWithSingleThread(double[] vector) {
@@ -105,11 +105,12 @@ public class Lab1 {
         double r1 = lab.measureEuclideanNormCalculationWithSingleThread(vector);
         long t1 = System.currentTimeMillis() - startingTime;
 
-        startingTime = System.currentTimeMillis();
+        long startingTime1 = System.currentTimeMillis();
         double r2 = lab.measureEuclideanNormCalculationWithMultipleThreads(vector);
-        long t2 = System.currentTimeMillis() - startingTime;
+        long t2 = System.currentTimeMillis() - startingTime1;
 
-        System.out.println("t1 = " + t1 + ", t2 = " + t2);
+        System.out.println("r1 = " + r1 + ", r2 = " + r2 + ", r2-r1 = " + (r2 - r1));
+        System.out.println("t1 = " + t1 + ", t2 = " + t2 + ", t2-t1 = " + (t2 - t1));
 
         double accelerationFactor = calculateAccelerationFactor(t1, t2);
         System.out.println("the acceleration factor = " + accelerationFactor);
@@ -127,5 +128,11 @@ public class Lab1 {
     private static double calculateEfficiencyFactor(double sN, int cores) {
         return sN / cores;
     }
+
+}
+
+class Lab2 {
+
+
 
 }
