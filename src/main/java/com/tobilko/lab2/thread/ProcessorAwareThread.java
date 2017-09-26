@@ -1,5 +1,7 @@
-package com.tobilko.lab2;
+package com.tobilko.lab2.thread;
 
+import com.tobilko.lab2.processor.BasicProcessor;
+import com.tobilko.lab2.processor.Processor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

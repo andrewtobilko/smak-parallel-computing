@@ -1,4 +1,4 @@
-package com.tobilko.lab2;
+package com.tobilko.lab2.process;
 
 import lombok.RequiredArgsConstructor;
 

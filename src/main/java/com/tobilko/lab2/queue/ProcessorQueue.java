@@ -1,9 +1,9 @@
-package com.tobilko.lab2;
+package com.tobilko.lab2.queue;
 
+import com.tobilko.lab2.process.Process;
 import com.tobilko.util.RandomGenerator;
 
 import java.util.PriorityQueue;
-import java.util.Random;
 
 /**
  * Created by Andrew Tobilko on 9/25/17.

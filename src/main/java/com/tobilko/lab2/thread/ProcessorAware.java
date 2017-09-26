@@ -1,4 +1,7 @@
-package com.tobilko.lab2;
+package com.tobilko.lab2.thread;
+
+import com.tobilko.lab2.processor.BasicProcessor;
+import com.tobilko.lab2.processor.Processor;
 
 /**
  * Created by Andrew Tobilko on 9/26/17.
