@@ -109,8 +109,7 @@ public class Lab1 {
         double r2 = lab.measureEuclideanNormCalculationWithMultipleThreads(vector);
         long t2 = System.currentTimeMillis() - startingTime1;
 
-        System.out.println("r1 = " + r1 + ", r2 = " + r2 + ", r2-r1 = " + (r2 - r1));
-        System.out.println("t1 = " + t1 + ", t2 = " + t2 + ", t2-t1 = " + (t2 - t1));
+        // todo
 
         double accelerationFactor = calculateAccelerationFactor(t1, t2);
         System.out.println("the acceleration factor = " + accelerationFactor);
@@ -128,11 +127,5 @@ public class Lab1 {
     private static double calculateEfficiencyFactor(double sN, int cores) {
         return sN / cores;
     }
-
-}
-
-class Lab2 {
-
-
 
 }
