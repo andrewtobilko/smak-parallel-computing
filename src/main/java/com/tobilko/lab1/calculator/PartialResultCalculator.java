@@ -18,6 +18,10 @@ public final class PartialResultCalculator extends Thread {
 
     @Override
     public void run() {
+        calculatePartially();
+    }
+
+    private void calculatePartially() {
         for (int i = startingIndex; i < endingIndex; ) {
             result += array[i++];
         }

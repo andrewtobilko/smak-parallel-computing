@@ -18,7 +18,6 @@ public final class Lab1 {
         PartialResultCalculator calculator = new PartialResultCalculator(vector, 0, vector.length);
 
         calculator.run();
-        calculator.join();
 
         return calculateEuclideanNormFromSum(calculator.getResult());
     }
@@ -38,7 +37,7 @@ public final class Lab1 {
 
         // run
         for (PartialResultCalculator calculator : calculators) {
-            calculator.run();
+            calculator.start();
         }
 
         // join
@@ -53,11 +52,11 @@ public final class Lab1 {
     }
 
     private int calculateStartingIndexForI(int i) {
-        return VECTOR_SIZE / THREAD_LIMIT * i;
+        return ARRAY_SIZE / THREAD_LIMIT * i;
     }
 
     private int calculateEndingIndexForI(int i) {
-        return VECTOR_SIZE / THREAD_LIMIT * (i + 1);
+        return ARRAY_SIZE / THREAD_LIMIT * (i + 1);
     }
 
     public static void main(String[] args) throws Exception {

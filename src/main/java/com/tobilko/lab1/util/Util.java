@@ -5,15 +5,18 @@ package com.tobilko.lab1.util;
  */
 public final class Util {
 
-    public static final int VECTOR_SIZE = 200_000_000;
-    public static final int THREAD_LIMIT = 4;
+    public static final int ARRAY_SIZE = 10_000_000;
+    public static final int RANDOM_NUMBER_ORIGIN = 1;
+    public static final int RANDOM_NUMBER_BOUND = 1;
 
-    public static double calculateAccelerationFactor(double t1, double tN) {
-        return t1 / tN;
+    public static final int THREAD_LIMIT = 10;
+
+    public static double calculateAccelerationFactor(double timeForSingleThread, double timeForMultipleThreads) {
+        return timeForSingleThread / timeForMultipleThreads;
     }
 
-    public static double calculateEfficiencyFactor(double sN, int cores) {
-        return sN / cores;
+    public static double calculateEfficiencyFactor(double accelerationFactor, int cores) {
+        return accelerationFactor / cores;
     }
 
     public static double calculateEuclideanNormFromSum(double sum) {
