@@ -18,6 +18,4 @@ public final class ProcessorAwareThread extends Thread implements ProcessorAware
     @NonNull
     private Processor processor;
 
-
-
 }

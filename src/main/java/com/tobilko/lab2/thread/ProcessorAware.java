@@ -1,6 +1,5 @@
 package com.tobilko.lab2.thread;
 
-import com.tobilko.lab2.processor.BasicProcessor;
 import com.tobilko.lab2.processor.Processor;
 
 /**
@@ -9,6 +8,7 @@ import com.tobilko.lab2.processor.Processor;
 public interface ProcessorAware {
 
     Processor getProcessor();
+
     void setProcessor(Processor processor);
 
 }

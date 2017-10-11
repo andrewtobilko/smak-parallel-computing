@@ -1,20 +1,17 @@
 package com.tobilko.lab1;
 
-import com.tobilko.util.RandomGenerator;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.tobilko.lab1.calculator.PartialResultCalculator;
+import com.tobilko.lab1.generator.RandomDoubleArrayGenerator;
 import lombok.SneakyThrows;
 
-import java.util.Random;
 import java.util.stream.Stream;
+
+import static com.tobilko.lab1.util.Util.*;
 
 /**
  * Created by Andrew Tobilko on 9/16/17.
  */
-public class Lab1 {
-
-    private final int VECTOR_SIZE = 200_000_000;
-    private final int THREAD_LIMIT = 4;
+public final class Lab1 {
 
     @SneakyThrows
     public double measureEuclideanNormCalculationWithSingleThread(double[] vector) {
@@ -55,10 +52,6 @@ public class Lab1 {
         return calculateEuclideanNormFromSum(sum);
     }
 
-    private double calculateEuclideanNormFromSum(double sum) {
-        return Math.sqrt(sum);
-    }
-
     private int calculateStartingIndexForI(int i) {
         return VECTOR_SIZE / THREAD_LIMIT * i;
     }
@@ -67,65 +60,29 @@ public class Lab1 {
         return VECTOR_SIZE / THREAD_LIMIT * (i + 1);
     }
 
-    private class RandomDoubleArrayGenerator implements RandomGenerator<double[]> {
-
-        private final Random generator = new Random();
-
-        @Override
-        public double[] generate() {
-            return generator.doubles(VECTOR_SIZE, 0, 1000).toArray();
-        }
-
-    }
-
-    @RequiredArgsConstructor
-    private class PartialResultCalculator extends Thread {
-
-        private final double[] vector;
-        private final int startingIndex;
-        private final int endingIndex;
-
-        @Getter
-        private double result;
-
-        @Override
-        public void run() {
-            for (int i = startingIndex; i < endingIndex; ) {
-                result += vector[i++];
-            }
-        }
-
-    }
-
     public static void main(String[] args) throws Exception {
         final Lab1 lab = new Lab1();
-        final double[] vector = lab.new RandomDoubleArrayGenerator().generate();
+        final double[] vector = new RandomDoubleArrayGenerator().generate();
 
         long startingTime = System.currentTimeMillis();
-        double r1 = lab.measureEuclideanNormCalculationWithSingleThread(vector);
-        long t1 = System.currentTimeMillis() - startingTime;
+        double result = lab.measureEuclideanNormCalculationWithSingleThread(vector);
+        long finalTimeForSingleThread = System.currentTimeMillis() - startingTime;
 
-        long startingTime1 = System.currentTimeMillis();
-        double r2 = lab.measureEuclideanNormCalculationWithMultipleThreads(vector);
-        long t2 = System.currentTimeMillis() - startingTime1;
+        System.out.println("Results for a single thread: " + result + ", " + finalTimeForSingleThread);
 
-        // todo
+        startingTime = System.currentTimeMillis();
+        result = lab.measureEuclideanNormCalculationWithMultipleThreads(vector);
+        long finalTimeForMultipleThreads = System.currentTimeMillis() - startingTime;
 
-        double accelerationFactor = calculateAccelerationFactor(t1, t2);
-        System.out.println("the acceleration factor = " + accelerationFactor);
+        System.out.println("Results for multiple threads: " + result + ", " + finalTimeForMultipleThreads);
+
+        double accelerationFactor = calculateAccelerationFactor(finalTimeForSingleThread, finalTimeForMultipleThreads);
+        System.out.println("The acceleration factor: " + accelerationFactor);
 
         int cores = Runtime.getRuntime().availableProcessors();
         double efficiencyFactor = calculateEfficiencyFactor(accelerationFactor, cores);
-        System.out.println("the efficiency factor = " + efficiencyFactor);
-        System.out.println("the numbers of cores = " + cores);
-    }
-
-    private static double calculateAccelerationFactor(double t1, double tN) {
-        return t1 / tN;
-    }
-
-    private static double calculateEfficiencyFactor(double sN, int cores) {
-        return sN / cores;
+        System.out.println("The efficiency factor: " + efficiencyFactor);
+        System.out.println("The numbers of cores: " + cores);
     }
 
 }

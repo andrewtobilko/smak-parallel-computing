@@ -1,7 +1,7 @@
 package com.tobilko.lab2.queue;
 
 import com.tobilko.lab2.process.Process;
-import com.tobilko.util.RandomGenerator;
+import com.tobilko.lab1.generator.RandomGenerator;
 
 import java.util.PriorityQueue;
 
