@@ -5,11 +5,13 @@ package com.tobilko.lab1.util;
  */
 public final class Util {
 
-    public static final int ARRAY_SIZE = 10_000_000;
-    public static final int RANDOM_NUMBER_ORIGIN = 1;
-    public static final int RANDOM_NUMBER_BOUND = 1;
+    public static final int ARRAY_SIZE = 100_000;
+    public static final int LOAD_NUMBER = 10_000;
 
-    public static final int THREAD_LIMIT = 10;
+    public static final int RANDOM_NUMBER_ORIGIN = 0;
+    public static final int RANDOM_NUMBER_BOUND = 1000;
+
+    public static final int THREAD_LIMIT = 8;
 
     public static double calculateAccelerationFactor(double timeForSingleThread, double timeForMultipleThreads) {
         return timeForSingleThread / timeForMultipleThreads;
@@ -17,6 +19,14 @@ public final class Util {
 
     public static double calculateEfficiencyFactor(double accelerationFactor, int cores) {
         return accelerationFactor / cores;
+    }
+
+    public static int calculateStartingIndexForI(int i) {
+        return ARRAY_SIZE / THREAD_LIMIT * i;
+    }
+
+    public static int calculateEndingIndexForI(int i) {
+        return ARRAY_SIZE / THREAD_LIMIT * (i + 1);
     }
 
     public static double calculateEuclideanNormFromSum(double sum) {

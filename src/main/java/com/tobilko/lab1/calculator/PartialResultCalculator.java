@@ -2,6 +2,9 @@ package com.tobilko.lab1.calculator;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+
+import static com.tobilko.lab1.util.Util.LOAD_NUMBER;
 
 /**
  * Created by Andrew Tobilko on 10/11/17.
@@ -18,12 +21,22 @@ public final class PartialResultCalculator extends Thread {
 
     @Override
     public void run() {
-        calculatePartially();
+        //calculatePartially();
+        calculatePartiallyWithLoad();
     }
 
     private void calculatePartially() {
-        for (int i = startingIndex; i < endingIndex; ) {
-            result += array[i++];
+        for (int i = startingIndex; i < endingIndex; ++i) {
+            result += array[i];
+        }
+    }
+
+    private void calculatePartiallyWithLoad() {
+        for (int j = 0; j < LOAD_NUMBER; ++j) {
+            for (int i = startingIndex; i < endingIndex; ++i) {
+                result += array[i];
+            }
+            System.out.println("I'm doing " + getName());
         }
     }
 

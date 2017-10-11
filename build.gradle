@@ -5,5 +5,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.projectlombok:lombok:1.16.18'
+    compile 'org.projectlombok:lombok:1.16.18',
+            'org.openjdk.jmh:jmh-core:1.19',
+            'org.openjdk.jmh:jmh-generator-annprocess:1.19'
 }
