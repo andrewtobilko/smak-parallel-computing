@@ -41,7 +41,7 @@ public final class Processor {
         return "Processor #" + id;
     }
 
-    private class QueueStateChecker extends Thread {
+    private final class QueueStateChecker extends Thread {
 
         private final ProcessorQueue queue;
 
@@ -61,9 +61,9 @@ public final class Processor {
                 int size = queue.getProcesses().size();
 
                 if (size == 0) {
-                    System.out.printf("%s of %s is empty!\n", this.queue, this);
+                    System.out.printf("%s of %s is empty!\n", queue, Processor.this);
                 } else {
-                    System.out.printf("%s of %s has %d processors in line.\n", this.queue, this, size);
+                    System.out.printf("%s of %s has %d processors in line.\n", queue, Processor.this, size);
                 }
 
                 Thread.sleep(5000L);

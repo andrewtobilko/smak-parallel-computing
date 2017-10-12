@@ -12,7 +12,7 @@ public final class Process {
 
     private final long id = generateRandomId();
     
-    // // TODO: 10/12/17
+    // // TODO: 10/12/17 rename
     private final long timeInterval;
 
     @Override

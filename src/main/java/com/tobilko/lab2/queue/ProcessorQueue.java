@@ -23,6 +23,7 @@ public final class ProcessorQueue {
     public ProcessorQueue(int processAmount) {
         numberOfProcessesToGenerate = processAmount;
         processes = new PriorityQueue<>(processAmount);
+        // TODO: 10/12/17 generator
     }
 
     @Override
