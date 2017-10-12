@@ -50,8 +50,7 @@ public final class Lab2 {
         for (int i = 0; i < PROCESSOR_NUMBER; ++i) {
             Processor processor = new Processor(
                     generateRandomProcessorWorkTime(),
-                    new ProcessorQueue()
-                    //new ProcessorQueue(PROCESS_NUMBERS[i])
+                    new ProcessorQueue(PROCESS_NUMBERS[i])
             );
             threads[i] = new ProcessorThread(processor);
         }
