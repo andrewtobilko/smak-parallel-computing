@@ -43,15 +43,18 @@ public final class Lab2 {
     public static void main(String[] args) {
 
         final int PROCESSOR_NUMBER = 2;
-        final int[] PROCESS_NUMBERS = {12, 10};
+        final int[] PROCESS_NUMBERS = {5, 2};
 
         final ProcessorThread[] threads = new ProcessorThread[PROCESSOR_NUMBER];
 
         for (int i = 0; i < PROCESSOR_NUMBER; ++i) {
-            Processor processor = new Processor(
+            final ProcessorQueue queue = new ProcessorQueue(PROCESS_NUMBERS[i]);
+
+            final Processor processor = new Processor(
                     generateRandomProcessorWorkTime(),
-                    new ProcessorQueue(PROCESS_NUMBERS[i])
+                    queue
             );
+            queue.setProcessor(processor);
             threads[i] = new ProcessorThread(processor);
         }
 

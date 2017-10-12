@@ -1,8 +1,10 @@
 package com.tobilko.lab2.process;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import static com.tobilko.lab2.util.Util.generateRandomId;
+import static java.lang.String.format;
 
 /**
  * Created by Andrew Tobilko on 9/25/17.
@@ -11,13 +13,13 @@ import static com.tobilko.lab2.util.Util.generateRandomId;
 public final class Process {
 
     private final long id = generateRandomId();
-    
-    // // TODO: 10/12/17 rename
+
+    @Getter
     private final long timeInterval;
 
     @Override
     public String toString() {
-        return "Process #" + id;
+        return format("Process #%d [%ds]", id, timeInterval);
     }
 
 }

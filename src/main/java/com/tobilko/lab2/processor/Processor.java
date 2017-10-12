@@ -1,5 +1,6 @@
 package com.tobilko.lab2.processor;
 
+import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.queue.ProcessorQueue;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -31,8 +32,15 @@ public final class Processor {
     @SneakyThrows
     public void process() {
         while (true) {
-            System.out.println(this + " is looking for a process...");
-            Thread.sleep(5000L);
+            Process processToExecute = queue.getProcesses().poll();
+
+            if (processToExecute != null) {
+                System.out.printf("%s is executing %s...\n", this, processToExecute);
+                Thread.sleep(processingTime * 1000);
+            }
+
+
+            System.out.println("!");
         }
     }
 
@@ -61,9 +69,14 @@ public final class Processor {
                 int size = queue.getProcesses().size();
 
                 if (size == 0) {
-                    System.out.printf("%s of %s is empty!\n", queue, Processor.this);
+                    System.err.printf("%s of %s is empty!\n", queue, Processor.this);
+
+                    synchronized (queue) {
+                        System.out.printf("%s waiting for %s...", Processor.this, queue);
+                        queue.wait();
+                    }
                 } else {
-                    System.out.printf("%s of %s has %d processors in line.\n", queue, Processor.this, size);
+                    System.err.printf("%s of %s has %d processors in line.\n", queue, Processor.this, size);
                 }
 
                 Thread.sleep(5000L);
