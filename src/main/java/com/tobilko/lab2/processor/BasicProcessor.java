@@ -1,37 +1,40 @@
 package com.tobilko.lab2.processor;
 
-import com.tobilko.lab2.thread.ProcessorAware;
 import com.tobilko.lab2.queue.ProcessorQueue;
 import lombok.RequiredArgsConstructor;
+
+import static com.tobilko.lab2.util.Util.generateRandomId;
 
 /**
  * Created by Andrew Tobilko on 9/25/17.
  */
 @RequiredArgsConstructor
-public final class BasicProcessor implements Processor, ProcessorAware {
+public final class BasicProcessor implements Processor {
 
-    /**
-     * the time for serving a process
-     */
+    private final long id = generateRandomId();
+    // // TODO: 10/12/17
     private final long serviceProcessTime;
 
     private ProcessorQueue queue;
 
-    private Processor siblingProcess;
-
-    @Override
-    public Processor getProcessor() {
-        return siblingProcess;
-    }
-
-    @Override
-    public void setProcessor(Processor processor) {
-        siblingProcess = processor;
-    }
+//    @Override
+//    public Processor getProcessor() {
+//        return siblingProcess;
+//    }
+//
+//    @Override
+//    public void setProcessor(Processor processor) {
+//        siblingProcess = processor;
+//    }
 
     @Override
     public void process() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "Processor #" + id;
     }
 
 }

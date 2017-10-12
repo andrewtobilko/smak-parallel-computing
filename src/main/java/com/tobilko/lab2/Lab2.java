@@ -1,8 +1,19 @@
 package com.tobilko.lab2;
 
+import com.tobilko.lab2.processor.BasicProcessor;
+import com.tobilko.lab2.thread.ProcessorAware;
+import com.tobilko.lab2.thread.ProcessorThread;
+
+import static com.tobilko.lab2.util.Util.generateRandomProcessorWorkTime;
+
 /**
- * В программах класс CPUQueue описывает очередь, класс CPUProcess моделирует поток процессов,
+ * В программах
+ * класc CPUQueue описывает очередь,
+ * класс CPUProcess моделирует поток процессов,
  * а класс CPU – поток обслуживания процесса центральным процессором.
+ *
+ *
+ *
  * Очереди, потоки процессов и обслуживание процесса моделируются с помощью объектов
  * соответствующего класса. Параметры очереди моделируются с помощью алгоритмов вставки
  * и извлечения процесса из очереди. Параметром  процесса является интервал времени
@@ -29,12 +40,19 @@ package com.tobilko.lab2;
 
 public final class Lab2 {
 
-    private final static int LOWER_THREAD_BOUND = 1;
-    private final static int UPPER_THREAD_BOUND = 10;
-
     public static void main(String[] args) {
 
-        // TODO: 10/11/17
+        final int PROCESSOR_NUMBER = 2;
+        final ProcessorThread[] threads = new ProcessorThread[PROCESSOR_NUMBER];
+
+        for (int i = 0; i < PROCESSOR_NUMBER; ++i) {
+            BasicProcessor processor = new BasicProcessor(generateRandomProcessorWorkTime());
+            threads[i] = new ProcessorThread(processor);
+        }
+
+        for (ProcessorThread thread : threads) {
+            thread.start();
+        }
 
     }
 
