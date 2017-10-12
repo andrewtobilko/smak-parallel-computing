@@ -2,7 +2,6 @@ package com.tobilko.lab1.calculator;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 
 import static com.tobilko.lab1.util.Util.LOAD_NUMBER;
 

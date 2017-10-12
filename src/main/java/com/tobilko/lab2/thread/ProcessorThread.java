@@ -13,7 +13,7 @@ public final class ProcessorThread extends Thread {
 
     @Override
     public void run() {
-        System.out.printf("%s [%ds] is gonna start...\n", processor, processor.getProcessingTime());
+        System.out.printf("%s is gonna start...\n", processor);
         processor.process();
     }
 
