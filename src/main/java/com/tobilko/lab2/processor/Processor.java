@@ -39,8 +39,7 @@ public final class Processor {
                 Thread.sleep(processingTime * 1000);
             }
 
-
-            System.out.println("!");
+            // todo : check other queues
         }
     }
 
