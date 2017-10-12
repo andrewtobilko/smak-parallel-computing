@@ -25,30 +25,12 @@ public final class Processor {
     }
 
     private void initialiseQueueStateChecker() {
-        Thread checker = new Thread(this::checkQueueState);
-        checker.setDaemon(true);
-
-        checker.start();
-    }
-
-    @SneakyThrows
-    private void checkQueueState() {
-        while (true) {
-            int size = queue.getProcesses().size();
-
-            if (size == 0) {
-                System.out.printf("%s of %s is empty!\n", this.queue, this);
-            } else {
-                System.out.printf("%s of %s has %d processors in line.\n", this.queue, this, size);
-            }
-
-            Thread.sleep(5000L);
-        }
+        new QueueStateChecker(queue).start();
     }
 
     @SneakyThrows
     public void process() {
-        while(true) {
+        while (true) {
             System.out.println(this + " is looking for a process...");
             Thread.sleep(5000L);
         }
@@ -57,6 +39,36 @@ public final class Processor {
     @Override
     public String toString() {
         return "Processor #" + id;
+    }
+
+    private class QueueStateChecker extends Thread {
+
+        private final ProcessorQueue queue;
+
+        public QueueStateChecker(ProcessorQueue queue) {
+            this.queue = queue;
+            setDaemon(true);
+        }
+
+        @Override
+        public void run() {
+            checkQueueState();
+        }
+
+        @SneakyThrows
+        private void checkQueueState() {
+            while (true) {
+                int size = queue.getProcesses().size();
+
+                if (size == 0) {
+                    System.out.printf("%s of %s is empty!\n", this.queue, this);
+                } else {
+                    System.out.printf("%s of %s has %d processors in line.\n", this.queue, this, size);
+                }
+
+                Thread.sleep(5000L);
+            }
+        }
     }
 
 }
