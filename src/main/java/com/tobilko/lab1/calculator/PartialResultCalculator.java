@@ -21,22 +21,21 @@ public final class PartialResultCalculator extends Thread {
 
     @Override
     public void run() {
-        //calculatePartially();
-        calculatePartiallyWithLoad();
+        calculatePartially();
+        //calculatePartiallyWithLoad();
     }
 
     private void calculatePartially() {
         for (int i = startingIndex; i < endingIndex; ++i) {
-            result += array[i];
+            result += Math.pow(array[i], 2);
         }
     }
 
     private void calculatePartiallyWithLoad() {
         for (int j = 0; j < LOAD_NUMBER; ++j) {
             for (int i = startingIndex; i < endingIndex; ++i) {
-                result += array[i];
+                result += Math.pow(array[i], 2);
             }
-            System.out.println("I'm doing " + getName());
         }
     }
 

@@ -5,8 +5,8 @@ package com.tobilko.lab1.util;
  */
 public final class Util {
 
-    public static final int ARRAY_SIZE = 100_000;
-    public static final int LOAD_NUMBER = 10_000;
+    public static final int ARRAY_SIZE = 1_000_000;
+    public static final int LOAD_NUMBER = 1_000;
 
     public static final int RANDOM_NUMBER_ORIGIN = 0;
     public static final int RANDOM_NUMBER_BOUND = 1000;

@@ -53,7 +53,7 @@ public final class Lab1 {
         return calculateEuclideanNormFromSum(sum);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         final Lab1 lab = new Lab1();
         final double[] array = new RandomDoubleArrayGenerator().generate();
 
