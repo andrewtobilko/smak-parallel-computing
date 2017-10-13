@@ -6,7 +6,7 @@ import com.tobilko.lab2.queue.state.QueueStateChecker;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
-import static com.tobilko.lab2.util.ColourUtil.Color.BLACK;
+import static com.tobilko.lab2.util.ColourUtil.Color.BLUE;
 import static com.tobilko.lab2.util.ColourUtil.println;
 import static com.tobilko.lab2.util.Util.generateRandomId;
 import static java.lang.String.format;
@@ -36,20 +36,19 @@ public final class Processor {
     @SneakyThrows
     public void process() {
         while (true) {
+            Thread.sleep(5000L);
             Process processToExecute = queue.getProcesses().poll();
 
             if (processToExecute != null) {
-                println(format("%s is executing %s...", this, processToExecute), BLACK);
+                println(format("%s is executing %s from %s", this, processToExecute, queue), BLUE);
                 Thread.sleep(processingTime * 1000);
-            } else {
-                // todo : check other queues
             }
         }
     }
 
     @Override
     public String toString() {
-        return "Processor #" + id;
+        return format("Processor #%d [%ds]", id, processingTime);
     }
 
 }

@@ -7,12 +7,15 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public final class Util {
 
+    private static final int MIN_SECONDS = 1;
+    private static final int MAX_SECONDS = 11;
+
     public static long generateRandomId() {
         return ThreadLocalRandom.current().nextInt(100, 1000);
     }
 
-    public static int generateRandomProcessorWorkTime() {
-        return ThreadLocalRandom.current().nextInt(1, 11);
+    public static int generateRandomTimeInSeconds() {
+        return ThreadLocalRandom.current().nextInt(MIN_SECONDS, MAX_SECONDS);
     }
 
 }

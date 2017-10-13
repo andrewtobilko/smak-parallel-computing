@@ -3,8 +3,7 @@ package com.tobilko.lab2.queue.state;
 import com.tobilko.lab2.queue.ProcessorQueue;
 import lombok.SneakyThrows;
 
-import static com.tobilko.lab2.util.ColourUtil.Color.BLACK;
-import static com.tobilko.lab2.util.ColourUtil.Color.GREEN;
+import static com.tobilko.lab2.util.ColourUtil.Color.RED;
 import static com.tobilko.lab2.util.ColourUtil.println;
 import static java.lang.String.format;
 
@@ -31,14 +30,7 @@ public final class QueueStateChecker extends Thread {
             int size = queue.getProcesses().size();
 
             if (size == 0) {
-                println(format("%s of %s is empty!", queue, queue.getProcessor()), GREEN);
-
-                synchronized (queue) {
-                    println(format("%s waiting for %s...", queue.getProcessor(), queue), GREEN);
-                    queue.wait();
-                }
-            } else {
-                println(format("%s of %s has %d processors in line.", queue, queue.getProcessor(), size), BLACK);
+                println(format("%s of %s is empty!", queue, queue.getProcessor()), RED);
             }
 
             Thread.sleep(5000L);

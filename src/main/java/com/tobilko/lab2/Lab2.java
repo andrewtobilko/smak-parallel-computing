@@ -4,7 +4,7 @@ import com.tobilko.lab2.processor.Processor;
 import com.tobilko.lab2.queue.ProcessorQueue;
 import com.tobilko.lab2.thread.ProcessorThread;
 
-import static com.tobilko.lab2.util.Util.generateRandomProcessorWorkTime;
+import static com.tobilko.lab2.util.Util.generateRandomTimeInSeconds;
 
 /**
  * Created by Andrew Tobilko on 9/25/17.
@@ -12,7 +12,7 @@ import static com.tobilko.lab2.util.Util.generateRandomProcessorWorkTime;
 public final class Lab2 {
 
     private static final int PROCESSOR_NUMBER = 2;
-    private static final int[] PROCESS_NUMBERS = {5, 2};
+    private static final int[] PROCESS_NUMBERS = {5, 5};
 
     public static void main(String[] args) {
         checkInputParametersValidity();
@@ -24,7 +24,7 @@ public final class Lab2 {
             final ProcessorQueue queue = new ProcessorQueue(PROCESS_NUMBERS[i]);
 
             final Processor processor = new Processor(
-                    generateRandomProcessorWorkTime(),
+                    generateRandomTimeInSeconds(),
                     queue
             );
             queue.setProcessor(processor);

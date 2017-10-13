@@ -6,7 +6,7 @@ import com.tobilko.lab2.process.generator.ProcessGenerator;
 import com.tobilko.lab2.queue.ProcessorQueue;
 import lombok.SneakyThrows;
 
-import static com.tobilko.lab2.util.ColourUtil.Color.BLACK;
+import static com.tobilko.lab2.util.ColourUtil.Color.GREEN;
 import static com.tobilko.lab2.util.ColourUtil.println;
 import static java.lang.String.format;
 
@@ -18,11 +18,10 @@ public final class ProcessGeneratorThread extends Thread {
     private final ProcessorQueue queue;
     private final RandomGenerator<Process> generator;
 
-    public ProcessGeneratorThread(ProcessorQueue queue, int amount) {
+    public ProcessGeneratorThread(ProcessorQueue queue) {
         this.queue = queue;
-        numberOfProcessesToGenerate = amount;
+        numberOfProcessesToGenerate = queue.getProcesses().remainingCapacity();
         generator = new ProcessGenerator();
-        setDaemon(true);
     }
 
     private int numberOfProcessesToGenerate;
@@ -30,16 +29,13 @@ public final class ProcessGeneratorThread extends Thread {
     @Override
     @SneakyThrows
     public void run() {
-        while (numberOfProcessesToGenerate >= 0) {
-            Process process = generator.generate();
-            long timeInterval = process.getTimeInterval();
-            println(format("Generated a process for %s - %s. The number of processes remaining: %d.",
-                    queue, process, numberOfProcessesToGenerate--), BLACK);
+        while (numberOfProcessesToGenerate > 0) {
+            final Process process = generator.generate();
+            queue.getProcesses().add(process);
 
-            synchronized (queue.getProcessor()) {
-                println(format("%s is notifying %s.", queue, queue.getProcessor()), BLACK);
-                queue.getProcessor().notify();
-            }
+            final long timeInterval = process.getTimeInterval();
+            println(format("Generated %s for %s. The number of processes remaining to generate: %d.",
+                    process, queue, numberOfProcessesToGenerate--), GREEN);
 
             Thread.sleep(timeInterval * 1000);
         }
