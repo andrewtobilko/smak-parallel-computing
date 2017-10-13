@@ -11,17 +11,15 @@ import static com.tobilko.lab2.util.Util.generateRandomProcessorWorkTime;
  */
 public final class Lab2 {
 
+    private static final int PROCESSOR_NUMBER = 2;
+    private static final int[] PROCESS_NUMBERS = {5, 2};
+
     public static void main(String[] args) {
-
-        final int PROCESSOR_NUMBER = 2;
-        final int[] PROCESS_NUMBERS = {5, 2};
-
-        if (PROCESS_NUMBERS.length != PROCESSOR_NUMBER) {
-            throw new IllegalArgumentException("Check input parameters again.");
-        }
+        checkInputParametersValidity();
 
         final ProcessorThread[] threads = new ProcessorThread[PROCESSOR_NUMBER];
 
+        // initialise
         for (int i = 0; i < PROCESSOR_NUMBER; ++i) {
             final ProcessorQueue queue = new ProcessorQueue(PROCESS_NUMBERS[i]);
 
@@ -33,10 +31,17 @@ public final class Lab2 {
             threads[i] = new ProcessorThread(processor);
         }
 
+        // start
         for (ProcessorThread thread : threads) {
             thread.start();
         }
 
+    }
+
+    private static void checkInputParametersValidity() {
+        if (PROCESS_NUMBERS.length != PROCESSOR_NUMBER) {
+            throw new IllegalArgumentException("Check input parameters again.");
+        }
     }
 
 }
