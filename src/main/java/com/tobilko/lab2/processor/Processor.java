@@ -2,6 +2,7 @@ package com.tobilko.lab2.processor;
 
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.queue.ProcessorQueue;
+import com.tobilko.lab2.queue.state.QueueStateChecker;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -37,50 +38,15 @@ public final class Processor {
             if (processToExecute != null) {
                 System.out.printf("%s is executing %s...\n", this, processToExecute);
                 Thread.sleep(processingTime * 1000);
+            } else {
+                // todo : check other queues
             }
-
-            // todo : check other queues
         }
     }
 
     @Override
     public String toString() {
         return "Processor #" + id;
-    }
-
-    private final class QueueStateChecker extends Thread {
-
-        private final ProcessorQueue queue;
-
-        public QueueStateChecker(ProcessorQueue queue) {
-            this.queue = queue;
-            setDaemon(true);
-        }
-
-        @Override
-        public void run() {
-            checkQueueState();
-        }
-
-        @SneakyThrows
-        private void checkQueueState() {
-            while (true) {
-                int size = queue.getProcesses().size();
-
-                if (size == 0) {
-                    System.err.printf("%s of %s is empty!\n", queue, Processor.this);
-
-                    synchronized (queue) {
-                        System.out.printf("%s waiting for %s...", Processor.this, queue);
-                        queue.wait();
-                    }
-                } else {
-                    System.err.printf("%s of %s has %d processors in line.\n", queue, Processor.this, size);
-                }
-
-                Thread.sleep(5000L);
-            }
-        }
     }
 
 }
