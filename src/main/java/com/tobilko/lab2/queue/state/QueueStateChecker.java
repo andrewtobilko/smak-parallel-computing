@@ -31,14 +31,14 @@ public final class QueueStateChecker extends Thread {
             int size = queue.getProcesses().size();
 
             if (size == 0) {
-                println(format("%s of %s is empty!\n", queue, queue.getProcessor()), GREEN);
+                println(format("%s of %s is empty!", queue, queue.getProcessor()), GREEN);
 
                 synchronized (queue) {
-                    println(format("%s waiting for %s...\n", queue.getProcessor(), queue), GREEN);
+                    println(format("%s waiting for %s...", queue.getProcessor(), queue), GREEN);
                     queue.wait();
                 }
             } else {
-                println(format("%s of %s has %d processors in line.\n", queue, queue.getProcessor(), size), BLACK);
+                println(format("%s of %s has %d processors in line.", queue, queue.getProcessor(), size), BLACK);
             }
 
             Thread.sleep(5000L);

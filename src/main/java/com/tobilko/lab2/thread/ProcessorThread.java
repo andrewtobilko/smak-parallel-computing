@@ -1,9 +1,9 @@
 package com.tobilko.lab2.thread;
 
 import com.tobilko.lab2.processor.Processor;
-import com.tobilko.lab2.util.ColourUtil;
 import lombok.RequiredArgsConstructor;
 
+import static com.tobilko.lab2.util.ColourUtil.Color.BLACK;
 import static com.tobilko.lab2.util.ColourUtil.println;
 import static java.lang.String.format;
 
@@ -17,7 +17,7 @@ public final class ProcessorThread extends Thread {
 
     @Override
     public void run() {
-        println(format("%s is gonna start...\n", processor), ColourUtil.Color.BLACK);
+        println(format("%s is gonna start...", processor), BLACK);
         processor.process();
     }
 

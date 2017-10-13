@@ -1,10 +1,9 @@
 package com.tobilko.lab2.queue;
 
 import com.tobilko.lab1.generator.RandomGenerator;
-import com.tobilko.lab2.generator.ProcessGenerator;
+import com.tobilko.lab2.process.generator.ProcessGenerator;
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.processor.Processor;
-import com.tobilko.lab2.util.ColourUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -62,7 +61,7 @@ public final class ProcessorQueue {
             while (numberOfProcessesToGenerate >= 0) {
                 Process process = generator.generate();
                 long timeInterval = process.getTimeInterval();
-                println(format("Generated a process for %s - %s. The number of processes remaining: %d.\n",
+                println(format("Generated a process for %s - %s. The number of processes remaining: %d.",
                         ProcessorQueue.this, process, numberOfProcessesToGenerate--), BLACK);
 
                 synchronized (ProcessorQueue.this.getProcessor()) {

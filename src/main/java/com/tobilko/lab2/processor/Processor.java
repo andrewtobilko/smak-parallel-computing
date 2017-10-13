@@ -6,7 +6,10 @@ import com.tobilko.lab2.queue.state.QueueStateChecker;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
+import static com.tobilko.lab2.util.ColourUtil.Color.BLACK;
+import static com.tobilko.lab2.util.ColourUtil.println;
 import static com.tobilko.lab2.util.Util.generateRandomId;
+import static java.lang.String.format;
 
 /**
  * Created by Andrew Tobilko on 9/25/17.
@@ -36,7 +39,7 @@ public final class Processor {
             Process processToExecute = queue.getProcesses().poll();
 
             if (processToExecute != null) {
-                System.out.printf("%s is executing %s...\n", this, processToExecute);
+                println(format("%s is executing %s...", this, processToExecute), BLACK);
                 Thread.sleep(processingTime * 1000);
             } else {
                 // todo : check other queues

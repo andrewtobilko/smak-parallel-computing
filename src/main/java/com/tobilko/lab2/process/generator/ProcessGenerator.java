@@ -1,4 +1,4 @@
-package com.tobilko.lab2.generator;
+package com.tobilko.lab2.process.generator;
 
 import com.tobilko.lab1.generator.RandomGenerator;
 import com.tobilko.lab2.process.Process;

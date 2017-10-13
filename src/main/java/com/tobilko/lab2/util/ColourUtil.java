@@ -27,7 +27,7 @@ public final class ColourUtil {
 
     public static void println(String value, Color color) {
         final String code = color.getANSICode();
-        System.out.println(join("", code, value, code, Color.BLACK.getANSICode()));
+        System.out.println(join("", code, value, code, Color.BLACK.getANSICode(), "\n"));
     }
 
 }
