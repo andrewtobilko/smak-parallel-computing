@@ -7,8 +7,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public final class Util {
 
-    private static final int MIN_SECONDS = 1;
-    private static final int MAX_SECONDS = 11;
+    public static final int MIN_SECONDS = 1;
+    public static final int MAX_SECONDS = 11;
 
     public static long generateRandomId() {
         return ThreadLocalRandom.current().nextInt(100, 1000);

@@ -10,6 +10,7 @@ import static java.lang.String.format;
 /**
  * Created by Andrew Tobilko on 10/13/17.
  */
+@Deprecated
 public final class QueueStateChecker extends Thread {
 
     private final ProcessorQueue queue;

@@ -1,6 +1,7 @@
-package com.tobilko.lab2.thread;
+package com.tobilko.lab2.processor.thread;
 
 import com.tobilko.lab2.processor.Processor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import static com.tobilko.lab2.util.ColourUtil.Color.BLACK;
@@ -13,6 +14,7 @@ import static java.lang.String.format;
 @RequiredArgsConstructor
 public final class ProcessorThread extends Thread {
 
+    @Getter
     private final Processor processor;
 
     @Override
