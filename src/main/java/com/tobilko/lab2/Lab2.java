@@ -1,10 +1,8 @@
 package com.tobilko.lab2;
 
-import com.tobilko.lab2.processor.Processor;
-import com.tobilko.lab2.processor.thread.ProcessorThread;
-import com.tobilko.lab2.queue.ProcessorQueue;
-
-import java.util.Queue;
+import com.tobilko.lab2.unit.Unit;
+import com.tobilko.lab2.unit.thread.UnitThread;
+import com.tobilko.lab2.queue.BasicProcessorQueue;
 
 import static com.tobilko.lab2.util.Util.generateRandomTimeInSeconds;
 
@@ -13,41 +11,49 @@ import static com.tobilko.lab2.util.Util.generateRandomTimeInSeconds;
  */
 public final class Lab2 {
 
-    private static final int PROCESSOR_NUMBER = 3;
-    private static final int[] PROCESS_NUMBERS = {5, 5, 4};
+    private static final int PROCESSOR_NUMBER = 2;
+    private static final int[] PROCESS_NUMBERS = {2, 5};
 
     public static void main(String[] args) {
         checkInputParametersValidity();
 
-        final ProcessorThread[] threads = new ProcessorThread[PROCESSOR_NUMBER];
+        final Thread[] threads = new UnitThread[PROCESSOR_NUMBER];
 
         // initialise processors
-        for (int i = 0; i < PROCESSOR_NUMBER; ++i) {
-            final ProcessorQueue queue = new ProcessorQueue(PROCESS_NUMBERS[i]);
+//        for (int i = 0; i < PROCESSOR_NUMBER; ++i) {
+//            final BasicProcessorQueue queue = new BasicProcessorQueue(PROCESS_NUMBERS[i]);
+//
+//            final Unit processor = new Unit(
+//                    generateRandomTimeInSeconds(),
+//                    queue
+//            );
+//            queue.setProcessor(processor);
+//            threads[i] = new UnitThread(processor);
+//        }
 
-            final Processor processor = new Processor(
-                    generateRandomTimeInSeconds(),
-                    queue
+        for (int i = 0; i < PROCESSOR_NUMBER; ++i) {
+            final Unit unit = new Unit(
+
             );
-            queue.setProcessor(processor);
-            threads[i] = new ProcessorThread(processor);
+
+            threads[i] = new UnitThread(unit);
         }
 
         // initialise adjacent processors
-        for (int i = 0; i < PROCESSOR_NUMBER; ++i) {
-            Queue<Processor> adjacentProcessors = threads[i].getProcessor().getAdjacentProcessors();
-
-            for (int j = 0; j < PROCESSOR_NUMBER; j++) {
-                if (i == j) {
-                    continue;
-                }
-
-                adjacentProcessors.add(threads[j].getProcessor());
-            }
-        }
+//        for (int i = 0; i < PROCESSOR_NUMBER; ++i) {
+//            java.util.Queue adjacentProcessors = threads[i].getUnit().getAdjacentQueues();
+//
+//            for (int j = 0; j < PROCESSOR_NUMBER; j++) {
+//                if (i == j) {
+//                    continue;
+//                }
+//
+//                adjacentProcessors.add(threads[j].getProcessor());
+//            }
+//        }
 
         // start
-        for (ProcessorThread thread : threads) {
+        for (UnitThread thread : threads) {
             thread.start();
         }
 

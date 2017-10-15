@@ -1,25 +1,12 @@
 package com.tobilko.lab2.process;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-import static com.tobilko.lab2.util.Util.generateRandomId;
-import static java.lang.String.format;
+import com.tobilko.lab2.util.Identifiable;
 
 /**
- * Created by Andrew Tobilko on 9/25/17.
+ * Created by Andrew Tobilko on 10/15/17.
  */
-@RequiredArgsConstructor
-public final class Process {
+public interface Process extends Identifiable {
 
-    private final long id = generateRandomId();
-
-    @Getter
-    private final long timeInterval;
-
-    @Override
-    public String toString() {
-        return format("Process #%d [%ds]", id, timeInterval);
-    }
+    int getTimeInterval();
 
 }
