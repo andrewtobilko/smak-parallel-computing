@@ -1,10 +1,9 @@
 package com.tobilko.lab2;
 
-import com.tobilko.lab2.unit.Unit;
 import com.tobilko.lab2.unit.thread.UnitThread;
-import com.tobilko.lab2.queue.BasicProcessorQueue;
 
-import static com.tobilko.lab2.util.Util.generateRandomTimeInSeconds;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Created by Andrew Tobilko on 9/25/17.
@@ -19,41 +18,31 @@ public final class Lab2 {
 
         final Thread[] threads = new UnitThread[PROCESSOR_NUMBER];
 
-        // initialise processors
-//        for (int i = 0; i < PROCESSOR_NUMBER; ++i) {
-//            final BasicProcessorQueue queue = new BasicProcessorQueue(PROCESS_NUMBERS[i]);
-//
-//            final Unit processor = new Unit(
-//                    generateRandomTimeInSeconds(),
-//                    queue
-//            );
-//            queue.setProcessor(processor);
-//            threads[i] = new UnitThread(processor);
-//        }
+        // 1. initialise all working units (comprises a processor and a queue)
+        //      1.1. create an empty queue within the same thread
+        //      1.2. create a thread for the processor and run the thread
+        //      1.3.
+        // 2. create all source threads
+        // 3. attach a working unit to a source thread
+        // 4. start all source threads
+        // 5.
 
-        for (int i = 0; i < PROCESSOR_NUMBER; ++i) {
-            final Unit unit = new Unit(
 
-            );
 
-            threads[i] = new UnitThread(unit);
+        // The classes CompositeUnit and BasicUnit implement the Runnable.
+
+
+        final Unit mainUnit = new CompositeUnit();
+
+        for (int i = 0; i < PROCESSOR_NUMBER; i++) {
+            Unit unit = new BasicUnit();
+
+
         }
 
-        // initialise adjacent processors
-//        for (int i = 0; i < PROCESSOR_NUMBER; ++i) {
-//            java.util.Queue adjacentProcessors = threads[i].getUnit().getAdjacentQueues();
-//
-//            for (int j = 0; j < PROCESSOR_NUMBER; j++) {
-//                if (i == j) {
-//                    continue;
-//                }
-//
-//                adjacentProcessors.add(threads[j].getProcessor());
-//            }
-//        }
 
         // start
-        for (UnitThread thread : threads) {
+        for (Thread thread : threads) {
             thread.start();
         }
 
@@ -63,6 +52,39 @@ public final class Lab2 {
         if (PROCESS_NUMBERS.length != PROCESSOR_NUMBER) {
             throw new IllegalArgumentException("Check input parameters again.");
         }
+    }
+
+}
+
+interface Unit extends Runnable {
+
+    default Collection<Unit> getChildUnits() {
+        throw new UnsupportedOperationException("The unit doesn't have child units...");
+    }
+
+    default Unit getParentUnit() {
+        throw new UnsupportedOperationException("The unit doesn't have a parent...");
+    }
+
+}
+
+class CompositeUnit implements Unit {
+
+    private final Collection<Unit> units;
+    private final Unit parent;
+
+    @Override
+    public void run() {
+
+    }
+
+}
+
+class BasicUnit implements Unit {
+
+    @Override
+    public void run() {
+
     }
 
 }

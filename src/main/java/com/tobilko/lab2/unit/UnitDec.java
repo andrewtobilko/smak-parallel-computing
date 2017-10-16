@@ -5,7 +5,7 @@ import com.tobilko.lab2.generator.thread.ProcessGeneratorThread;
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.processor.Processor;
 import com.tobilko.lab2.processor.thread.ProcessorThread;
-import com.tobilko.lab2.queue.BasicProcessorQueue;
+import com.tobilko.lab2.queue.ProcessQueue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -15,15 +15,17 @@ import lombok.SneakyThrows;
  */
 @Getter
 @RequiredArgsConstructor
-public final class Unit implements Comparable<Unit> {
+public final class UnitDec implements Comparable<UnitDec> {
 
-    // the same thread
-    private final BasicProcessorQueue queue;
+    private final ProcessQueue queue;
+
     private Thread processorThread;
+    private Thread generatorThread;
 
-    public Unit(RandomGenerator<Process> generator, Processor processor) {
+    public UnitDec(RandomGenerator<Process> generator, Processor processor, ProcessQueue queue) {
         initialiseAndStartProcessGeneratorThread(generator);
         initialiseAndStartProcessorThread(processor);
+        this.queue = queue;
     }
 
     private void initialiseAndStartProcessorThread(Processor processor) {
@@ -31,7 +33,7 @@ public final class Unit implements Comparable<Unit> {
     }
 
     private void initialiseAndStartProcessGeneratorThread(RandomGenerator<Process> generator) {
-        new ProcessGeneratorThread(generator).start();
+        (generatorThread = new ProcessGeneratorThread(generator)).start();
     }
 
     @SneakyThrows
@@ -40,14 +42,14 @@ public final class Unit implements Comparable<Unit> {
     }
 
     @Override
-    public int compareTo(Unit another) {
+    public int compareTo(UnitDec another) {
         final int queueSizeComparisonResult = Integer.compare(
                 getQueue().getProcesses().size(),
                 another.getQueue().getProcesses().size()
         );
 
         return queueSizeComparisonResult == 0 ?
-                Long.compare(processor.getProcessingTime(), another.getProcessor().getProcessingTime()) :
+                Long.compare(get.getProcessingTime(), another.getProcessor().getProcessingTime()) :
                 queueSizeComparisonResult;
     }
 

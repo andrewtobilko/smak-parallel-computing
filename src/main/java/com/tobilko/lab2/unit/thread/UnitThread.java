@@ -1,6 +1,6 @@
 package com.tobilko.lab2.unit.thread;
 
-import com.tobilko.lab2.unit.Unit;
+import com.tobilko.lab2.unit.UnitDec;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +15,7 @@ import static java.lang.String.format;
 public final class UnitThread extends Thread {
 
     @Getter
-    private final Unit unit;
+    private final UnitDec unit;
 
     @Override
     public void run() {
