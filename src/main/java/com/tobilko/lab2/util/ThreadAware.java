@@ -1,4 +1,4 @@
-package com.tobilko.lab2a.util;
+package com.tobilko.lab2.util;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,5 +12,5 @@ public class ThreadAware<T> {
 
     private final T instance;
     private final Thread thread;
-    
+
 }

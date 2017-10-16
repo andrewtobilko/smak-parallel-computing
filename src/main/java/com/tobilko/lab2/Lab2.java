@@ -1,9 +1,9 @@
-package com.tobilko.lab2a;
+package com.tobilko.lab2;
 
-import com.tobilko.lab2a.generator.BasicProcessGenerator;
-import com.tobilko.lab2a.generator.runnable.GeneratorRunnable;
-import com.tobilko.lab2a.generator.runnable.ProcessGeneratorRunnable;
-import com.tobilko.lab2a.process.Process;
+import com.tobilko.lab2.generator.BasicProcessGenerator;
+import com.tobilko.lab2.generator.runnable.GeneratorRunnable;
+import com.tobilko.lab2.generator.runnable.ProcessGeneratorRunnable;
+import com.tobilko.lab2.process.Process;
 
 /**
  * Created by Andrew Tobilko on 10/16/17.

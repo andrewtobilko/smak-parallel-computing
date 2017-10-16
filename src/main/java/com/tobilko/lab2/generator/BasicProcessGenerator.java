@@ -1,8 +1,8 @@
-package com.tobilko.lab2a.generator;
+package com.tobilko.lab2.generator;
 
-import com.tobilko.lab2a.process.BasicProcess;
-import com.tobilko.lab2a.process.Process;
-import com.tobilko.lab2a.util.RandomUtil;
+import com.tobilko.lab2.process.BasicProcess;
+import com.tobilko.lab2.process.Process;
+import com.tobilko.lab2.util.RandomUtil;
 
 /**
  * Created by Andrew Tobilko on 10/16/17.

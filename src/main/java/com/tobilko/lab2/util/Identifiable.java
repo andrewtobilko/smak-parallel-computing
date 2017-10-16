@@ -1,4 +1,4 @@
-package com.tobilko.lab2a.util;
+package com.tobilko.lab2.util;
 
 import java.io.Serializable;
 

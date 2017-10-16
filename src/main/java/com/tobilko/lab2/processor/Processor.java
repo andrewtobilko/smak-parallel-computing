@@ -1,7 +1,7 @@
-package com.tobilko.lab2a.processor;
+package com.tobilko.lab2.processor;
 
 
-import com.tobilko.lab2a.util.Identifiable;
+import com.tobilko.lab2.util.Identifiable;
 
 /**
  * Created by Andrew Tobilko on 10/16/17.

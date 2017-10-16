@@ -1,6 +1,6 @@
-package com.tobilko.lab2a.queue;
+package com.tobilko.lab2.queue;
 
-import com.tobilko.lab2a.process.Process;
+import com.tobilko.lab2.process.Process;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

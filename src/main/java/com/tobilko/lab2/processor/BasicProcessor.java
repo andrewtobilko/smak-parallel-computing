@@ -1,4 +1,4 @@
-package com.tobilko.lab2a.process;
+package com.tobilko.lab2.processor;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public final class BasicProcess implements Process {
+public final class BasicProcessor implements Processor {
 
     private final int id;
-    private final int timeToNextGeneration;
+    private final int processingTime;
 
 }

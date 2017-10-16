@@ -1,7 +1,7 @@
-package com.tobilko.lab2a.generator.runnable;
+package com.tobilko.lab2.generator.runnable;
 
-import com.tobilko.lab2a.generator.Generator;
-import com.tobilko.lab2a.process.Process;
+import com.tobilko.lab2.generator.Generator;
+import com.tobilko.lab2.process.Process;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

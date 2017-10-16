@@ -1,6 +1,6 @@
-package com.tobilko.lab2a.processor.runnable;
+package com.tobilko.lab2.processor.runnable;
 
-import com.tobilko.lab2a.processor.Processor;
+import com.tobilko.lab2.processor.Processor;
 import lombok.RequiredArgsConstructor;
 
 /**

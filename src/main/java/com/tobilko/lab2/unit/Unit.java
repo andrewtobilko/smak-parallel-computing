@@ -1,9 +1,9 @@
-package com.tobilko.lab2a.unit;
+package com.tobilko.lab2.unit;
 
-import com.tobilko.lab2a.generator.Generator;
-import com.tobilko.lab2a.processor.Processor;
-import com.tobilko.lab2a.queue.Queue;
-import com.tobilko.lab2a.util.ThreadAware;
+import com.tobilko.lab2.generator.Generator;
+import com.tobilko.lab2.processor.Processor;
+import com.tobilko.lab2.queue.Queue;
+import com.tobilko.lab2.util.ThreadAware;
 
 /**
  * Created by Andrew Tobilko on 10/16/17.
