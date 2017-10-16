@@ -13,7 +13,7 @@ import java.util.Deque;
 @RequiredArgsConstructor
 public class BasicQueue implements Queue {
 
-    private int id;
+    private Integer id;
     private Deque<Process> processes;
 
 }

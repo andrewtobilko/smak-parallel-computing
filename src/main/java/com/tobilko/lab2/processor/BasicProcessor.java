@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public final class BasicProcessor implements Processor {
 
-    private final int id;
+    private final Integer id;
     private final int processingTime;
 
 }
