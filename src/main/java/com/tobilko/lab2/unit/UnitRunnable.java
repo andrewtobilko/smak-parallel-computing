@@ -1,6 +1,7 @@
 package com.tobilko.lab2.unit;
 
 import com.tobilko.lab2.generator.Generator;
+import com.tobilko.lab2.process.BasicProcess;
 import com.tobilko.lab2.processor.Processor;
 import com.tobilko.lab2.queue.Queue;
 import com.tobilko.lab2.util.ThreadAware;
@@ -18,10 +19,7 @@ public final class UnitRunnable implements Runnable {
     @Override
     public void run() {
         while (true) {
-            System.out.println("I am managing everything...");
-
-            processorThreadAware.getInstance();
-
+            Processor processor = processorThreadAware.getInstance();
         }
     }
 
