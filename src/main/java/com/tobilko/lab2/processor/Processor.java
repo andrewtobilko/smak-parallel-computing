@@ -9,6 +9,8 @@ import com.tobilko.lab2.util.Identifiable;
  */
 public interface Processor extends Identifiable<Integer> {
 
-    public boolean process(Process process);
+    int getProcessingTime();
+
+    boolean process(Process process);
 
 }
