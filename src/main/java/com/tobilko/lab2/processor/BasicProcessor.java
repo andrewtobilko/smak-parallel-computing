@@ -1,7 +1,12 @@
 package com.tobilko.lab2.processor;
 
 import com.tobilko.lab2.process.Process;
+import com.tobilko.lab2.util.OutputUtil;
 import lombok.Getter;
+
+import static com.tobilko.lab2.util.OutputUtil.*;
+import static com.tobilko.lab2.util.OutputUtil.OutputColour.*;
+import static java.lang.String.format;
 
 /**
  * Takes a process and emulates its execution by Thread.sleep.
@@ -27,6 +32,10 @@ public final class BasicProcessor implements Processor {
 
     @Override
     public boolean process(Process process) {
+        validateProcess(process);
+
+        println(GREEN, "%s started to execute %s", this, process);
+
         try {
             Thread.sleep(processingTime);
         } catch (InterruptedException e) {
@@ -34,6 +43,17 @@ public final class BasicProcessor implements Processor {
         }
 
         return true;
+    }
+
+    private void validateProcess(Process process) {
+        if (process == null) {
+            throw new IllegalArgumentException("");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return format("Processor #%d [%ds]", getId(), getProcessingTime());
     }
 
 }

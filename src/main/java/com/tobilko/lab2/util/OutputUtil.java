@@ -24,9 +24,8 @@ public final class OutputUtil {
         private final String ANSICode;
     }
 
-    public static void println(OutputColour colour, String format, Object formatArguments) {
-        String ansiCode = colour.getANSICode();
-        System.out.println(String.join("", ansiCode, String.format(format, formatArguments), ansiCode, "\n", OutputColour.RESET.getANSICode()));
+    public static void println(OutputColour colour, String format, Object... formatArguments) {
+        System.out.println(String.join("", colour.getANSICode(), String.format(format, formatArguments), OutputColour.RESET.getANSICode()));
     }
 
     private OutputUtil() {}

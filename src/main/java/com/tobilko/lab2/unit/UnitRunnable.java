@@ -1,7 +1,5 @@
 package com.tobilko.lab2.unit;
 
-import com.tobilko.lab2.generator.Generator;
-import com.tobilko.lab2.process.BasicProcess;
 import com.tobilko.lab2.processor.Processor;
 import com.tobilko.lab2.queue.Queue;
 import com.tobilko.lab2.util.ThreadAware;
