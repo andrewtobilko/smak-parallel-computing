@@ -1,10 +1,14 @@
 package com.tobilko.lab2.processor;
 
 import com.tobilko.lab2.process.Process;
+import lombok.Getter;
 
 /**
+ * Takes a process and emulates its execution by Thread.sleep.
+ * <p>
  * Created by Andrew Tobilko on 10/16/17.
  */
+@Getter
 public final class BasicProcessor implements Processor {
 
     private final Integer id;
@@ -30,16 +34,6 @@ public final class BasicProcessor implements Processor {
         }
 
         return true;
-    }
-
-    @Override
-    public Integer getId() {
-        return id;
-    }
-
-    @Override
-    public int getProcessingTime() {
-        return processingTime;
     }
 
 }

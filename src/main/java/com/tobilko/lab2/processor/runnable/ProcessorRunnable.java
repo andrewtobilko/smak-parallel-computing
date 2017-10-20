@@ -14,12 +14,6 @@ public final class ProcessorRunnable implements Runnable {
     @Override
     public void run() {
         while (true) {
-            System.out.println("The processor is running...");
-            try {
-                Thread.sleep(5000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 
