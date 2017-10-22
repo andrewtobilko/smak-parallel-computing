@@ -10,6 +10,6 @@ public interface Processor extends Identifiable<Integer> {
 
     int getProcessingTime();
 
-    boolean process(Process process);
+    void process(Process process) throws InterruptedException;
 
 }

@@ -1,11 +1,10 @@
 package com.tobilko.lab2.processor;
 
 import com.tobilko.lab2.process.Process;
-import com.tobilko.lab2.util.OutputUtil;
 import lombok.Getter;
 
-import static com.tobilko.lab2.util.OutputUtil.*;
-import static com.tobilko.lab2.util.OutputUtil.OutputColour.*;
+import static com.tobilko.lab2.util.OutputUtil.OutputColour.GREEN;
+import static com.tobilko.lab2.util.OutputUtil.println;
 import static java.lang.String.format;
 
 /**
@@ -31,23 +30,20 @@ public final class BasicProcessor implements Processor {
     }
 
     @Override
-    public boolean process(Process process) {
+    public void process(Process process) throws InterruptedException {
         validateProcess(process);
+        logProcess(process);
 
+        Thread.sleep(processingTime);
+    }
+
+    private void logProcess(Process process) {
         println(GREEN, "%s started to execute %s", this, process);
-
-        try {
-            Thread.sleep(processingTime);
-        } catch (InterruptedException e) {
-            return false;
-        }
-
-        return true;
     }
 
     private void validateProcess(Process process) {
         if (process == null) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("A processor doesn't execute nulls.");
         }
     }
 

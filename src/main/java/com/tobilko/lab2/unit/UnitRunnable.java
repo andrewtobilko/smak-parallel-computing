@@ -1,7 +1,7 @@
 package com.tobilko.lab2.unit;
 
 import com.tobilko.lab2.processor.Processor;
-import com.tobilko.lab2.queue.Queue;
+import com.tobilko.lab2.queue.Deque;
 import com.tobilko.lab2.util.ThreadAware;
 import lombok.RequiredArgsConstructor;
 
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public final class UnitRunnable implements Runnable {
 
-    private final Queue queue;
+    private final Deque queue;
     private final ThreadAware<Processor> processorThreadAware;
 
     @Override

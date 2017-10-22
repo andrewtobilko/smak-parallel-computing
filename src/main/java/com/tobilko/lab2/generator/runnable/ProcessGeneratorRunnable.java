@@ -2,12 +2,8 @@ package com.tobilko.lab2.generator.runnable;
 
 import com.tobilko.lab2.generator.Generator;
 import com.tobilko.lab2.process.Process;
-import com.tobilko.lab2.queue.Queue;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Deque;
 
 /**
  * Created by Andrew Tobilko on 10/16/17.
