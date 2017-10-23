@@ -39,6 +39,41 @@ The program is broken if multiple threads access the same mutable state variable
 - **a thread-safe class encapsulates any needed synchronisation**
 - **a thread-safe class does not require its clients to provide their synchronisation**
 
+##### Stateless instances
+
+- stateless object do not have a state
+- stateless object's state is a particular computation saved into local variables that are stored on the thread's stack and are accessible only to the thread
+- stateless object is always thread-safe
+
+##### Atomicity
+
+- an atomic operation is a single, indivisible operation
+- a race condition is when the correctness of the application depends on the relative timing or interleaving of multiple threads
+- compound operations:
+    - check-then-act (lazy initialisation)
+    - read-modify-write (the increment operator)
+- compound operations should be atomic to avoid race conditions
+
+##### Locks
+
+- a build-in mechanism - intrinsic/monitor locks - synchronisation blocks
+- locks make few compound operations atomic
+- reentrancy
+    - a thread can reenter to the monitor if it is currently holding it
+    - the lock = an owning thread and an enquiring count
+    - works per thread rather than per invocation basic (what POSIX thread mutex does)
+    - simplifies OO concurrent code
+- all multiple thread access to the same variable should be guarded by the same lock
+- synchronisation causes liveness and performance issues
+
+##### Liveness and performance
+
+- narrow the scope of synchronisation blocks
+- exclude long-running operations from synchronisation blocks
+- don't mix up different synchronisation mechanisms
+- synchronisation blocks should be "short enough" rather than "too small"
+
+
 ## Sharing objects
 
 1. visibility = there is no guarantee that the reading thread will see a value written by another thread

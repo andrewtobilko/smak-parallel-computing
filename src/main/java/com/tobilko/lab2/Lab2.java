@@ -2,13 +2,11 @@ package com.tobilko.lab2;
 
 import com.tobilko.lab2.generator.BasicProcessGenerator;
 import com.tobilko.lab2.generator.Generator;
-import com.tobilko.lab2.generator.runnable.GeneratorRunnable;
 import com.tobilko.lab2.generator.runnable.ProcessGeneratorRunnable;
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.processor.BasicProcessor;
 import com.tobilko.lab2.processor.Processor;
 import com.tobilko.lab2.processor.runnable.ProcessorRunnable;
-import com.tobilko.lab2.unit.UnitRunnable;
 import com.tobilko.lab2.util.RandomUtil;
 
 import java.util.Deque;
