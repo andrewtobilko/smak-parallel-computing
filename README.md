@@ -82,7 +82,31 @@ The program is broken if multiple threads access the same mutable state variable
 
 ## Sharing objects
 
-1. visibility = there is no guarantee that the reading thread will see a value written by another thread
+##### Visibility
 
-1.1. stale data = a thread may see an out-of-date data
-1.2. nonatomic 64-bit operations = the JVM is permitted to treat a 64-bit read or write as two separate 32-bit operations
+- there is no guarantee that the reading thread will see a value written by another thread
+- stale data
+    - a thread may see an out-of-date data
+    - a thread may see an up-to-date data
+    - can cause serious safety and liveness failures
+    - is similar to READ_UNCOMMITTED isolation level
+- nonatomic 64-bit operations
+    - the JVM is permitted to treat a 64-bit read or write as two separate 32-bit operations
+- locking and visibility
+    - **locks on a common lock guarantee memory visibility**
+- volatile variables
+    - operations should not be reordered by the compiler and runtime
+    - are not cached in registers or in caches
+    - don't rely on volatile variables - it is more fragile and harder to understand\
+    - use volatile variables when
+        - writes to a variable do not depend on its current state
+        - they don't participate in invariants with other variables
+        - there is no other locking mechanisms or they are not required
+
+##### Publishing and escape
+
+- publishing - making an object available outside of its current scope
+- escaping - an object has been published before it should have been
+
+
+   

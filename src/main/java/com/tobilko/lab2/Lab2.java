@@ -9,7 +9,9 @@ import com.tobilko.lab2.processor.Processor;
 import com.tobilko.lab2.processor.runnable.ProcessorRunnable;
 import com.tobilko.lab2.util.RandomUtil;
 
+import java.util.Comparator;
 import java.util.Deque;
+import java.util.PriorityQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
 /**
