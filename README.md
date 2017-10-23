@@ -2,6 +2,8 @@
 
 ## Thread safety
 
+##### Introduction
+
 - concurrent programming is not about threads and locks
 - writing thread-safe code is about access to state (shared, mutable) 
 - locks and threads are just mechanisms to write such code
@@ -18,12 +20,15 @@
 - thread-safe is not about code
 - thread-safe is about data and its protection
 
+##### "False" thread safety
+
 The program is broken if multiple threads access the same mutable state variable without appropriate synchronisation. There are three ways to fix it:
 
 - don't share the state variable across multiple threads
 - make the state variable immutable
 - use synchronisation while accessing to the state variable
 
+##### Thread safety
 
 - it is far easier to design a class to be thread-safe than to retrofit it for thread safety later
 - encapsulation, immutability, clean specification of invariants are mandatory techniques while designing thread-safe classes
@@ -34,10 +39,11 @@ The program is broken if multiple threads access the same mutable state variable
     - _invariants_ - to constrain an object's state
     - _post-conditions_ - to describe the effects of object's operations
     
-    
-- **a class is thread-safe if it behaves correctly when accessed from multiple threads**
-- **a thread-safe class encapsulates any needed synchronisation**
-- **a thread-safe class does not require its clients to provide their synchronisation**
+##### Thread-safe class    
+
+- a class is thread-safe if it behaves correctly when accessed from multiple threads
+- a thread-safe class encapsulates any needed synchronisation
+- a thread-safe class does not require its clients to provide their synchronisation
 
 ##### Stateless instances
 
