@@ -109,4 +109,23 @@ The program is broken if multiple threads access the same mutable state variable
 - escaping - an object has been published before it should have been
 
 
+- safe construction practices
+    - don't allow the this reference escape during construction
+    - use a private constructor and a public factory method
+
    
+- thread confinement
+    - the technique to confine an object to a thread
+    - an object is not necessarily should be thread-safe
+    - but such usage is automatically thread-safe
+    - ad hoc thread confinement
+        - the responsibility of maintaining is up to the implementation
+        - use standard language mechanisms (if they can help)
+        - implement a particular subsystem as a single-threaded one
+    - stack confinement
+        - use local variables
+        - make sure that local variables don't escape from the stack scope
+    - LocalThread confinement
+        - to associate an object with a thread
+        - the methods to initialise/set/get an object
+    
