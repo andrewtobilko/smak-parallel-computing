@@ -9,48 +9,30 @@ import com.tobilko.lab2.processor.Processor;
 import com.tobilko.lab2.processor.runnable.ProcessorRunnable;
 import com.tobilko.lab2.util.RandomUtil;
 
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.PriorityQueue;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by Andrew Tobilko on 10/16/17.
  */
 public final class Lab2 {
+
     public static void main(String[] args) {
 
-        final int NUMBER_OF_GENERATORS = 2;
-        final int[] PROCESS_NUMBERS_TO_GENERATE = {5, 5};
+        final int L1 = 5;
+        final int L2 = 2;
 
-        for (int i = 0; i < NUMBER_OF_GENERATORS; i++) {
+        final Processor processor1 = new BasicProcessor(RandomUtil.getRandomId(), RandomUtil.getRandomTimeInSeconds());
+        final Processor processor2 = new BasicProcessor(RandomUtil.getRandomId(), RandomUtil.getRandomTimeInSeconds());
 
-            // create a generator
-            final Generator<Process> generator = new BasicProcessGenerator();
+        final Generator<Process> generator = new BasicProcessGenerator();
 
-            // create a processor
-            final Processor processor = new BasicProcessor(
-                    RandomUtil.getRandomId(),
-                    RandomUtil.getRandomTimeInSeconds()
-            );
+        final Runnable generatorRunnable1 = new ProcessGeneratorRunnable(generator, L1);
+        final Runnable generatorRunnable2 = new ProcessGeneratorRunnable(generator, L2);
 
-            // create a deque
-            Deque<Process> queue = new LinkedBlockingDeque<>();
-
-            // create a runnable for a generator thread
-            final Runnable generatorRunnable = new ProcessGeneratorRunnable(
-                    generator,
-                    PROCESS_NUMBERS_TO_GENERATE[i],
-                    queue
-            );
-
-            // create a runnable for a processor thread
-            final Runnable processorRunnable = new ProcessorRunnable(processor);
-
-            // create a unit to manage all of them together
-
-
-        }
+        new Thread(generatorRunnable1).start();
+        new Thread(generatorRunnable2).start();
 
     }
+
 }

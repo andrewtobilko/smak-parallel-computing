@@ -129,3 +129,8 @@ The program is broken if multiple threads access the same mutable state variable
         - to associate an object with a thread
         - the methods to initialise/set/get an object
     
+- use volatile to publish immutable objects
+    - immutable objects provide some kind of atomicity
+    - immutable object illuminate race conditions
+    - the assignment operator is an atomic one
+    - TODO

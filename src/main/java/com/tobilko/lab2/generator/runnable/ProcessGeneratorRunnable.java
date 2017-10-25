@@ -4,8 +4,7 @@ import com.tobilko.lab2.generator.Generator;
 import com.tobilko.lab2.process.Process;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Deque;
+import lombok.SneakyThrows;
 
 /**
  * Created by Andrew Tobilko on 10/16/17.
@@ -16,20 +15,18 @@ public final class ProcessGeneratorRunnable implements GeneratorRunnable<Process
 
     private final Generator<Process> generator;
     private final int limit;
-    private final Deque<Process> queue;
+//    private final Deque<Process> queue;
 
     @Override
+    @SneakyThrows
     public void run() {
-        int amount = limit;
+        int remainingNumberOfProcessesToGenerate = limit;
 
-        while (true) {
-            System.out.println("The generator is generating...");
-            try {
-                Thread.sleep(5000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        while (remainingNumberOfProcessesToGenerate-- > 0) {
+            Process process = generator.generate();
+            Thread.sleep(process.getTimeToNextGeneration() * 1000); // todo
         }
+
     }
 
 }
