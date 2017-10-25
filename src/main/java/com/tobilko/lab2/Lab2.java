@@ -6,11 +6,7 @@ import com.tobilko.lab2.generator.runnable.ProcessGeneratorRunnable;
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.processor.BasicProcessor;
 import com.tobilko.lab2.processor.Processor;
-import com.tobilko.lab2.processor.runnable.ProcessorRunnable;
 import com.tobilko.lab2.util.RandomUtil;
-
-import java.util.*;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by Andrew Tobilko on 10/16/17.
