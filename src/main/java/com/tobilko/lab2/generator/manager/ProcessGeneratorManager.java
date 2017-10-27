@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public final class ProcessGeneratorManager implements GeneratorManager<Generator<Process>> {
 
-    private final Generator<Process> generator;
-    private final int limit;
-    private final Deque<Process> deque;
+    private final Generator<Process> generator; // the mechanism to generate processes by
+    private final int limit;                    // a number of processes to generate
+    private final Deque<Process> deque;         // a place where generated processes will be placed in
 
     @Override
     public final void run() {
@@ -35,21 +35,23 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
     }
 
     private void addProcessToQueue(Process process) {
-        if (process == null) {
-            throw new IllegalArgumentException("NULL won't be added to the queue...");
-        }
+        validateProcess(process);
 
         boolean wasProcessAddedToTheQueue;
-
         synchronized (deque) {
             wasProcessAddedToTheQueue = deque.offerLast(process);
         }
 
-        System.out.println(
-                wasProcessAddedToTheQueue ?
-                        String.format("%s was added to the queue!", process) :
-                        String.format("An error occurred while adding %s to the queue...", process)
+        System.out.println(wasProcessAddedToTheQueue ?
+                String.format("%s was added to the queue!", process) :
+                String.format("An error occurred while adding %s to the queue...", process)
         );
+    }
+
+    private void validateProcess(Process process) {
+        if (process == null) {
+            throw new IllegalArgumentException("NULL won't be added to the queue...");
+        }
     }
 
     private void notifyOfProcessGenerated() {
