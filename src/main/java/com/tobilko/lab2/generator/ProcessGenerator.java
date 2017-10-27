@@ -7,10 +7,10 @@ import com.tobilko.lab2.util.RandomUtil;
 /**
  * Created by Andrew Tobilko on 10/16/17.
  */
-public class BasicProcessGenerator implements Generator<Process> {
+public final class ProcessGenerator implements Generator<Process> {
 
     @Override
-    public Process generate() {
+    public final Process generate() {
         return new BasicProcess(
                 RandomUtil.getRandomId(),
                 RandomUtil.getRandomTimeInSeconds()
