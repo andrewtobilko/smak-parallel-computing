@@ -1,16 +1,27 @@
 package com.tobilko.lab2.processor.manager;
 
-        import lombok.Getter;
-        import lombok.RequiredArgsConstructor;
-        import lombok.Setter;
+import com.tobilko.lab2.generator.Generator;
+import com.tobilko.lab2.process.Process;
+import com.tobilko.lab2.processor.Processor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
+import java.util.Deque;
 
 /**
  * Created by Andrew Tobilko on 10/16/17.
  */
-@Getter
-@Setter
 @RequiredArgsConstructor
 public final class ProcessorManager implements Runnable {
+
+    private final Processor processor;
+    @Getter
+    private final Deque<Process> deque;
+    private final Generator<Process> generator;
+
+    @Setter
+    private Deque<Process>[] deques;
 
     @Override
     public void run() {
