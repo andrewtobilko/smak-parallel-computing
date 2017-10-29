@@ -2,11 +2,18 @@ package com.tobilko.lab2.generator.manager;
 
 import com.tobilko.lab2.generator.Generator;
 import com.tobilko.lab2.process.Process;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.util.Deque;
 import java.util.concurrent.TimeUnit;
+
+import static com.tobilko.lab2.util.OutputUtil.OutputColour.*;
+import static com.tobilko.lab2.util.OutputUtil.println;
+import static java.lang.String.format;
+
 
 /**
  * Created by Andrew Tobilko on 10/16/17.
@@ -33,33 +40,38 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
 
     @Override
     public final void run() {
+        GeneratorManagerLogger.logManagerStart(this);
+
         int remainingNumberOfProcessesToGenerate = limit;
 
         while (remainingNumberOfProcessesToGenerate-- > 0) {
+            // generate
             final Process process = generateProcess();
 
+            // add to the queue and notify
             addProcessToQueue(process);
             notifyOfProcessGenerated();
 
+            // not to wait when there is no processes to generate
             if (remainingNumberOfProcessesToGenerate == 0) {
                 break;
             }
+
+            // sleep
             sleepTillNextGeneration(process.getTimeToNextGeneration());
         }
+
+        GeneratorManagerLogger.logManagerFinish(this);
     }
 
     private void addProcessToQueue(Process process) {
         validateProcess(process);
 
-        boolean wasProcessAddedToTheQueue;
         synchronized (deque) {
-            wasProcessAddedToTheQueue = deque.offerLast(process);
+            deque.offerLast(process);
         }
 
-        System.out.println(wasProcessAddedToTheQueue ?
-                String.format("%s was added to the queue!", process) :
-                String.format("An error occurred while adding %s to the queue...", process)
-        );
+        GeneratorManagerLogger.logProcessAdding(this, process);
     }
 
     private void validateProcess(Process process) {
@@ -81,6 +93,28 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
     @SneakyThrows
     private void sleepTillNextGeneration(long timeToTheNextGeneration) {
         TimeUnit.SECONDS.sleep(timeToTheNextGeneration);
+    }
+
+    @Override
+    public String toString() {
+        return format("Generator Manager [%s]", generator);
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    private static class GeneratorManagerLogger {
+
+        private static void logManagerStart(GeneratorManager<Generator<Process>> manager) {
+            println(GREEN, "%s is about to start generating.", manager);
+        }
+
+        private static void logManagerFinish(GeneratorManager<Generator<Process>> manager) {
+            println(RED, "%s is about to finish generating.", manager);
+        }
+
+        private static void logProcessAdding(GeneratorManager<Generator<Process>> manager, Process process) {
+            println(YELLOW, "%s: %s was added to the queue!", manager, process);
+        }
+
     }
 
 }

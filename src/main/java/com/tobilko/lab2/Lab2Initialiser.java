@@ -2,19 +2,19 @@ package com.tobilko.lab2;
 
 import com.tobilko.lab2.generator.Generator;
 import com.tobilko.lab2.generator.ProcessGenerator;
-import com.tobilko.lab2.generator.manager.GeneratorManager;
 import com.tobilko.lab2.generator.manager.ProcessGeneratorManager;
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.processor.BasicProcessor;
 import com.tobilko.lab2.processor.Processor;
 import com.tobilko.lab2.processor.manager.ProcessorManager;
-import com.tobilko.lab2.util.RandomUtil;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingDeque;
+
+import static com.tobilko.lab2.util.RandomUtil.getRandomId;
+import static com.tobilko.lab2.util.RandomUtil.getRandomTimeInSeconds;
 
 /**
  * Created by Andrew Tobilko on 10/29/17.
@@ -32,8 +32,8 @@ public final class Lab2Initialiser {
 
         // initialise managers
         for (int i = 0; i < NUMBER_OF_PROCESSES; ++i) {
-            final Processor processor = new BasicProcessor(RandomUtil.getRandomId(), RandomUtil.getRandomTimeInSeconds());
-            final Generator<Process> generator = new ProcessGenerator(RandomUtil.getRandomId());
+            final Processor processor = new BasicProcessor(getRandomId(), getRandomTimeInSeconds());
+            final Generator<Process> generator = new ProcessGenerator(getRandomId());
             final Deque<Process> deque = new LinkedList<>();
 
             generatorManagers[i] = new ProcessGeneratorManager(generator, parameters.numbersOfProcessesToGenerate[i], deque);

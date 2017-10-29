@@ -3,9 +3,7 @@ package com.tobilko.lab2.processor.manager;
 import com.tobilko.lab2.generator.Generator;
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.processor.Processor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Deque;
 
@@ -25,6 +23,11 @@ public final class ProcessorManager implements Runnable {
 
     @Override
     public void run() {
+        ProcessorManagerLogger processorManagerLogger = new ProcessorManagerLogger();
+
+    }
+
+    private static class ProcessorManagerLogger {
 
     }
 
