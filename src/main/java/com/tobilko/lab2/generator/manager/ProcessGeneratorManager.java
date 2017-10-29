@@ -40,7 +40,7 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
 
     @Override
     public final void run() {
-        GeneratorManagerLogger.logManagerStart(this);
+        ProcessGeneratorManagerLogger.logManagerStart(this);
 
         int remainingNumberOfProcessesToGenerate = limit;
 
@@ -61,7 +61,7 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
             sleepTillNextGeneration(process.getTimeToNextGeneration());
         }
 
-        GeneratorManagerLogger.logManagerFinish(this);
+        ProcessGeneratorManagerLogger.logManagerFinish(this);
     }
 
     private void addProcessToQueue(Process process) {
@@ -71,7 +71,7 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
             deque.offerLast(process);
         }
 
-        GeneratorManagerLogger.logProcessAdding(this, process);
+        ProcessGeneratorManagerLogger.logProcessAdding(this, process);
     }
 
     private void validateProcess(Process process) {
@@ -101,17 +101,17 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class GeneratorManagerLogger {
+    private static class ProcessGeneratorManagerLogger {
 
-        private static void logManagerStart(GeneratorManager<Generator<Process>> manager) {
+        private static void logManagerStart(ProcessGeneratorManager manager) {
             println(GREEN, "%s is about to start generating.", manager);
         }
 
-        private static void logManagerFinish(GeneratorManager<Generator<Process>> manager) {
+        private static void logManagerFinish(ProcessGeneratorManager manager) {
             println(RED, "%s is about to finish generating.", manager);
         }
 
-        private static void logProcessAdding(GeneratorManager<Generator<Process>> manager, Process process) {
+        private static void logProcessAdding(ProcessGeneratorManager manager, Process process) {
             println(YELLOW, "%s: %s was added to the queue!", manager, process);
         }
 

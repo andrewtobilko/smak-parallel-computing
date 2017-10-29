@@ -6,7 +6,7 @@ import com.tobilko.lab2.generator.manager.ProcessGeneratorManager;
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.processor.BasicProcessor;
 import com.tobilko.lab2.processor.Processor;
-import com.tobilko.lab2.processor.manager.ProcessorManager;
+import com.tobilko.lab2.processor.manager.BasicProcessorManager;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Deque;
@@ -28,7 +28,7 @@ public final class Lab2Initialiser {
         final int NUMBER_OF_PROCESSES = parameters.numberOfProcessors;
 
         final ProcessGeneratorManager[] generatorManagers = new ProcessGeneratorManager[NUMBER_OF_PROCESSES];
-        final ProcessorManager[] processorManagers = new ProcessorManager[NUMBER_OF_PROCESSES];
+        final BasicProcessorManager[] processorManagers = new BasicProcessorManager[NUMBER_OF_PROCESSES];
 
         // initialise managers
         for (int i = 0; i < NUMBER_OF_PROCESSES; ++i) {
@@ -37,14 +37,14 @@ public final class Lab2Initialiser {
             final Deque<Process> deque = new LinkedList<>();
 
             generatorManagers[i] = new ProcessGeneratorManager(generator, parameters.numbersOfProcessesToGenerate[i], deque);
-            processorManagers[i] = new ProcessorManager(processor, deque, generator);
+            processorManagers[i] = new BasicProcessorManager(processor, deque, generator);
         }
 
         // fill processors' deques to steal from
-        for (final ProcessorManager processorManager : processorManagers) {
+        for (final BasicProcessorManager processorManager : processorManagers) {
             final List<Deque<Process>> list = new LinkedList<>();
 
-            for (final ProcessorManager manager : processorManagers) {
+            for (final BasicProcessorManager manager : processorManagers) {
                 if (manager != processorManager) {
                     list.add(manager.getDeque());
                 }
