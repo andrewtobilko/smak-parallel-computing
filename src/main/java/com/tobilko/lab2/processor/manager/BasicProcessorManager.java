@@ -10,27 +10,52 @@ import java.util.Deque;
 import static com.tobilko.lab2.util.OutputUtil.OutputColour.GREEN;
 import static com.tobilko.lab2.util.OutputUtil.OutputColour.RED;
 import static com.tobilko.lab2.util.OutputUtil.println;
-import static java.lang.String.*;
+import static java.lang.String.format;
 
 /**
  * Created by Andrew Tobilko on 10/16/17.
  */
-@RequiredArgsConstructor
-public final class BasicProcessorManager implements ProcessorManager {
+@Getter
+public final class BasicProcessorManager extends Thread implements ProcessorManager {
 
-    @Getter
     private final Processor processor;
-    @Getter
     private final Deque<Process> deque;
     private final Generator<Process> generator;
+    private final ProcessorManagerInterrupter interrupter;
 
     @Setter
     private Deque<Process>[] deques;
 
+
+    public BasicProcessorManager(Processor processor, Deque<Process> deque, Generator<Process> generator) {
+        this.processor = processor;
+        this.deque = deque;
+        this.generator = generator;
+
+        // initialise the interrupter
+        interrupter = new ProcessorManagerInterrupter(generator);
+        interrupter.setDaemon(true);
+        interrupter.start();
+    }
+
+
     @Override
     public void run() {
         BasicProcessorManagerLogger.logProcessorManagerStart(this);
-        // todo
+
+        while(true) {
+            synchronized (generator) {
+                // wait for the generator
+                try {
+                    generator.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                break; // TODO: 10/29/17
+            }
+        }
+
         BasicProcessorManagerLogger.logProcessorManagerFinish(this);
     }
 
@@ -52,4 +77,38 @@ public final class BasicProcessorManager implements ProcessorManager {
 
     }
 
+    @RequiredArgsConstructor
+    private class ProcessorManagerInterrupter extends Thread {
+
+        private final Object monitor;
+
+        @Override
+        public void run() {
+
+            while (true) {
+                // wait
+                try {
+                    // wait for the manager
+                    synchronized (BasicProcessorManager.this) {
+                        BasicProcessorManager.this.wait();
+                    }
+
+                    // wait for the monitor
+                    synchronized (monitor) {
+                        monitor.wait();
+                    }
+
+                    // interrupt the manager
+                    BasicProcessorManager.this.interrupt();
+                } catch (InterruptedException e) {
+                    println(RED, "Someone interrupted the interrupter...");
+                }
+
+            }
+
+        }
+
+    }
+
 }
+
