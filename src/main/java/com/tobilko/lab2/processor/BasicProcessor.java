@@ -19,8 +19,7 @@ public final class BasicProcessor implements Processor {
     public BasicProcessor(Integer id, int processingTime) {
         this.id = id;
 
-        validateProcessingTime(processingTime);
-        this.processingTime = processingTime;
+        validateProcessingTime(this.processingTime = processingTime);
     }
 
     private void validateProcessingTime(int processingTime) {

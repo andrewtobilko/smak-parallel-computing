@@ -3,7 +3,6 @@ package com.tobilko.lab2.generator.manager;
 import com.tobilko.lab2.generator.Generator;
 import com.tobilko.lab2.process.Process;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.util.Deque;
@@ -13,12 +12,24 @@ import java.util.concurrent.TimeUnit;
  * Created by Andrew Tobilko on 10/16/17.
  */
 @Getter
-@RequiredArgsConstructor
 public final class ProcessGeneratorManager implements GeneratorManager<Generator<Process>> {
 
-    private final Generator<Process> generator; // the mechanism to generate processes by
+    private final Generator<Process> generator; // a mechanism to generate processes by
     private final int limit;                    // a number of processes to generate
     private final Deque<Process> deque;         // a place where generated processes will be placed in
+
+    public ProcessGeneratorManager(Generator<Process> generator, int limit, Deque<Process> deque) {
+        this.generator = generator;
+        this.deque = deque;
+
+        validateLimit(this.limit = limit);
+    }
+
+    private void validateLimit(int limit) {
+        if (limit < 1) {
+            throw new IllegalArgumentException("Limit should be a positive number.");
+        }
+    }
 
     @Override
     public final void run() {
@@ -30,6 +41,9 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
             addProcessToQueue(process);
             notifyOfProcessGenerated();
 
+            if (remainingNumberOfProcessesToGenerate == 0) {
+                break;
+            }
             sleepTillNextGeneration(process.getTimeToNextGeneration());
         }
     }

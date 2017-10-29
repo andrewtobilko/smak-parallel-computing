@@ -33,7 +33,7 @@ public final class Lab2Initialiser {
         // initialise managers
         for (int i = 0; i < NUMBER_OF_PROCESSES; ++i) {
             final Processor processor = new BasicProcessor(RandomUtil.getRandomId(), RandomUtil.getRandomTimeInSeconds());
-            final Generator<Process> generator = new ProcessGenerator();
+            final Generator<Process> generator = new ProcessGenerator(RandomUtil.getRandomId());
             final Deque<Process> deque = new LinkedList<>();
 
             generatorManagers[i] = new ProcessGeneratorManager(generator, parameters.numbersOfProcessesToGenerate[i], deque);
