@@ -33,7 +33,7 @@ public final class BasicProcessor implements Processor {
         validateProcess(process);
         logProcess(process);
 
-        Thread.sleep(processingTime);
+        Thread.sleep(processingTime * 1000);
     }
 
     private void logProcess(Process process) {

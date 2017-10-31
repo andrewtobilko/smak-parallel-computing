@@ -6,6 +6,7 @@ import com.tobilko.lab2.processor.Processor;
 import lombok.*;
 
 import java.util.Deque;
+import java.util.Random;
 
 import static com.tobilko.lab2.util.OutputUtil.OutputColour.GREEN;
 import static com.tobilko.lab2.util.OutputUtil.OutputColour.RED;
@@ -15,6 +16,9 @@ import static java.lang.String.format;
 /**
  * Created by Andrew Tobilko on 10/16/17.
  */
+// TODO: 10/31/17 iterate over all the queues until a process is found
+// TODO: 10/31/17 add statistics
+// TODO: 10/31/17 add runtime information to find out when a processor should gets terminated
 @Getter
 public final class BasicProcessorManager extends Thread implements ProcessorManager {
 
@@ -44,19 +48,55 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
         BasicProcessorManagerLogger.logProcessorManagerStart(this);
 
         while(true) {
-            synchronized (generator) {
-                // wait for the generator
-                try {
-                    generator.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+
+            Process process = null;
+            synchronized (deque) {
+                if (!deque.isEmpty()) {
+                    process = deque.pollFirst();
+                }
+            }
+
+            if (process == null) {
+                Random random = new Random();
+
+                int randomIndex = random.nextInt(deques.length);
+
+                final Deque<Process> dequeToStealFrom = deques[randomIndex];
+                Process alienProcess = null;
+                synchronized (dequeToStealFrom) {
+                    if (!dequeToStealFrom.isEmpty()) {
+                        alienProcess = dequeToStealFrom.pollFirst();
+                    }
                 }
 
-                break; // TODO: 10/29/17
+                if (alienProcess == null) {
+                    continue;
+                }
+
+                try {
+                    synchronized (this) {
+                        this.notify();
+                    }
+                    processor.process(alienProcess);
+                } catch (InterruptedException e) {
+                    System.err.println("INTERRUPTER has found OUR process waiting in the queue. LET'S execute it!");
+
+                    synchronized (dequeToStealFrom) {
+                        dequeToStealFrom.addFirst(alienProcess);
+                    }
+                }
+
+            } else {
+                try {
+                    processor.process(process);
+                } catch (InterruptedException e) {
+                    System.err.println("Someone interrupted the processor which was executing ITS OWN process. NO WAY!");
+                }
             }
+
         }
 
-        BasicProcessorManagerLogger.logProcessorManagerFinish(this);
+        //BasicProcessorManagerLogger.logProcessorManagerFinish(this);
     }
 
     @Override
@@ -111,4 +151,3 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
     }
 
 }
-
