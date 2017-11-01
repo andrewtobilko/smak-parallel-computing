@@ -1,6 +1,7 @@
 package com.tobilko.lab2.processor.manager;
 
 import com.tobilko.lab2.generator.Generator;
+import com.tobilko.lab2.information.Information;
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.processor.Processor;
 import lombok.*;
@@ -25,11 +26,9 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
     private final Processor processor;
     private final Deque<Process> deque;
     private final Generator<Process> generator;
-    private final ProcessorManagerInterrupter interrupter;
 
     @Setter
     private Deque<Process>[] deques;
-
 
     public BasicProcessorManager(Processor processor, Deque<Process> deque, Generator<Process> generator) {
         this.processor = processor;
@@ -37,7 +36,7 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
         this.generator = generator;
 
         // initialise the interrupter
-        interrupter = new ProcessorManagerInterrupter(generator);
+        Thread interrupter = new Thread(new ProcessorManagerInterrupter(generator));
         interrupter.setDaemon(true);
         interrupter.start();
     }
@@ -47,7 +46,7 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
     public void run() {
         BasicProcessorManagerLogger.logProcessorManagerStart(this);
 
-        while(true) {
+        while (isThereAnyProcessesAvailable()) {
 
             Process process = null;
             synchronized (deque) {
@@ -77,7 +76,10 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
                     synchronized (this) {
                         this.notify();
                     }
+                    System.err.println("starting to execute a stolen process");
                     processor.process(alienProcess);
+                    decrementProcessesRemainingCounter();
+                    System.err.println("ending to execute a stolen process");
                 } catch (InterruptedException e) {
                     System.err.println("INTERRUPTER has found OUR process waiting in the queue. LET'S execute it!");
 
@@ -89,6 +91,7 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
             } else {
                 try {
                     processor.process(process);
+                    decrementProcessesRemainingCounter();
                 } catch (InterruptedException e) {
                     System.err.println("Someone interrupted the processor which was executing ITS OWN process. NO WAY!");
                 }
@@ -96,7 +99,15 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
 
         }
 
-        //BasicProcessorManagerLogger.logProcessorManagerFinish(this);
+        BasicProcessorManagerLogger.logProcessorManagerFinish(this);
+    }
+
+    private boolean isThereAnyProcessesAvailable() {
+        return Information.RuntimeInformation.getProcessesRemaining().get() > 0;
+    }
+
+    private void decrementProcessesRemainingCounter() {
+        Information.RuntimeInformation.getProcessesRemaining().decrementAndGet();
     }
 
     @Override
@@ -118,7 +129,7 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
     }
 
     @RequiredArgsConstructor
-    private class ProcessorManagerInterrupter extends Thread {
+    private class ProcessorManagerInterrupter implements Runnable {
 
         private final Object monitor;
 
@@ -137,9 +148,9 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
                     synchronized (monitor) {
                         monitor.wait();
                     }
-
                     // interrupt the manager
                     BasicProcessorManager.this.interrupt();
+                    System.err.println("interrupted");
                 } catch (InterruptedException e) {
                     println(RED, "Someone interrupted the interrupter...");
                 }

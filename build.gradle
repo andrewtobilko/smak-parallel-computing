@@ -6,4 +6,5 @@ repositories {
 
 dependencies {
     compile 'org.projectlombok:lombok:1.16.18'
+    compile 'one.util:streamex:0.6.6'
 }

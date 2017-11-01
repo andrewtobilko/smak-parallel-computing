@@ -82,7 +82,7 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
 
     private void notifyOfProcessGenerated() {
         synchronized (generator) {
-            generator.notify();
+            generator.notifyAll();
         }
     }
 

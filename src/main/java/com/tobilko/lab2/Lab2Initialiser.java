@@ -3,15 +3,18 @@ package com.tobilko.lab2;
 import com.tobilko.lab2.generator.Generator;
 import com.tobilko.lab2.generator.ProcessGenerator;
 import com.tobilko.lab2.generator.manager.ProcessGeneratorManager;
+import com.tobilko.lab2.information.Information;
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.processor.BasicProcessor;
 import com.tobilko.lab2.processor.Processor;
 import com.tobilko.lab2.processor.manager.BasicProcessorManager;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static com.tobilko.lab2.util.RandomUtil.getRandomId;
 import static com.tobilko.lab2.util.RandomUtil.getRandomTimeInSeconds;
@@ -25,7 +28,11 @@ public final class Lab2Initialiser {
     public static void initialise(InputParameters parameters) {
         validateInputParameters(parameters);
 
-        final int NUMBER_OF_PROCESSES = parameters.numberOfProcessors;
+        final int NUMBER_OF_PROCESSES = parameters.getNumberOfProcessors();
+        final int[] NUMBERS_OF_PROCESSES_TO_GENERATE = parameters.getNumbersOfProcessesToGenerate();
+
+        Information.RuntimeInformation.getProcessesRemaining().set(IntStream.of(NUMBERS_OF_PROCESSES_TO_GENERATE).sum());
+        System.out.println("s = " + Information.RuntimeInformation.getProcessesRemaining().get());
 
         final ProcessGeneratorManager[] generatorManagers = new ProcessGeneratorManager[NUMBER_OF_PROCESSES];
         final BasicProcessorManager[] processorManagers = new BasicProcessorManager[NUMBER_OF_PROCESSES];
@@ -36,7 +43,7 @@ public final class Lab2Initialiser {
             final Generator<Process> generator = new ProcessGenerator(getRandomId());
             final Deque<Process> deque = new LinkedList<>();
 
-            generatorManagers[i] = new ProcessGeneratorManager(generator, parameters.numbersOfProcessesToGenerate[i], deque);
+            generatorManagers[i] = new ProcessGeneratorManager(generator, NUMBERS_OF_PROCESSES_TO_GENERATE[i], deque);
             processorManagers[i] = new BasicProcessorManager(processor, deque, generator);
         }
 
@@ -67,6 +74,7 @@ public final class Lab2Initialiser {
         }
     }
 
+    @Getter
     @RequiredArgsConstructor(staticName = "of")
     public static class InputParameters {
         private final int numberOfProcessors;
