@@ -31,8 +31,8 @@ public final class Lab2Initialiser {
         final int NUMBER_OF_PROCESSES = parameters.getNumberOfProcessors();
         final int[] NUMBERS_OF_PROCESSES_TO_GENERATE = parameters.getNumbersOfProcessesToGenerate();
 
-        Information.RuntimeInformation.getProcessesRemaining().set(IntStream.of(NUMBERS_OF_PROCESSES_TO_GENERATE).sum());
-        System.out.println("s = " + Information.RuntimeInformation.getProcessesRemaining().get());
+        Information.RuntimeInformation.setProcessesRemaining(IntStream.of(NUMBERS_OF_PROCESSES_TO_GENERATE).sum());
+        System.out.println("s = " + Information.RuntimeInformation.getProcessesRemaining());
 
         final ProcessGeneratorManager[] generatorManagers = new ProcessGeneratorManager[NUMBER_OF_PROCESSES];
         final BasicProcessorManager[] processorManagers = new BasicProcessorManager[NUMBER_OF_PROCESSES];

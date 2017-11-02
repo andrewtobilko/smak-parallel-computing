@@ -4,36 +4,33 @@ import com.tobilko.lab2.generator.Generator;
 import com.tobilko.lab2.information.Information;
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.processor.Processor;
+import com.tobilko.lab2.util.RandomUtil;
 import lombok.*;
 
-import java.util.Deque;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.tobilko.lab2.util.OutputUtil.OutputColour.GREEN;
 import static com.tobilko.lab2.util.OutputUtil.OutputColour.RED;
+import static com.tobilko.lab2.util.OutputUtil.OutputColour.YELLOW;
 import static com.tobilko.lab2.util.OutputUtil.println;
 import static java.lang.String.format;
 
 /**
  * Created by Andrew Tobilko on 10/16/17.
  */
-// TODO: 10/31/17 iterate over all the queues until a process is found
-// TODO: 10/31/17 add statistics
-// TODO: 10/31/17 add runtime information to find out when a processor should gets terminated
 @Getter
 public final class BasicProcessorManager extends Thread implements ProcessorManager {
 
-    private final Processor processor;
-    private final Deque<Process> deque;
-    private final Generator<Process> generator;
+    private final Processor processor;              // to delegate process handling
+    private final Deque<Process> deque;             // to take a process from
 
     @Setter
-    private Deque<Process>[] deques;
+    private Deque<Process>[] deques;                // to steal a process from
 
     public BasicProcessorManager(Processor processor, Deque<Process> deque, Generator<Process> generator) {
         this.processor = processor;
         this.deque = deque;
-        this.generator = generator;
 
         // initialise the interrupter
         Thread interrupter = new Thread(new ProcessorManagerInterrupter(generator));
@@ -56,6 +53,10 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
             }
 
             if (process == null) {
+                if (deques == null || deques.length == 0) {
+                    BasicProcessorManagerLogger.logWorkStealingFailure(this);
+                    System.out.println(String.format("%s couldn't steal a process since it didn't have deques.", this));
+                }
                 Random random = new Random();
 
                 int randomIndex = random.nextInt(deques.length);
@@ -103,11 +104,11 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
     }
 
     private boolean isThereAnyProcessesAvailable() {
-        return Information.RuntimeInformation.getProcessesRemaining().get() > 0;
+        return Information.RuntimeInformation.getProcessesRemaining() > 0;
     }
 
     private void decrementProcessesRemainingCounter() {
-        Information.RuntimeInformation.getProcessesRemaining().decrementAndGet();
+        Information.RuntimeInformation.decrementProcessesRemaining();
     }
 
     @Override
@@ -125,7 +126,9 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
         public static void logProcessorManagerFinish(BasicProcessorManager manager) {
             println(RED, "%s finished his work.", manager);
         }
-
+        public static void logWorkStealingFailure(BasicProcessorManager manager) {
+            println(YELLOW,"%s couldn't steal a process since it didn't have deques.", manager);
+        }
     }
 
     @RequiredArgsConstructor
@@ -161,4 +164,12 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
 
     }
 
+}
+
+class A
+{
+    public static String[] a;
+    public static void main(String[] args) {
+        System.out.println(a.length);
+    }
 }
