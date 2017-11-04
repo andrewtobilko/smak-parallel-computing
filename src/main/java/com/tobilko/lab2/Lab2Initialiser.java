@@ -31,8 +31,8 @@ public final class Lab2Initialiser {
         final int NUMBER_OF_PROCESSES = parameters.getNumberOfProcessors();
         final int[] NUMBERS_OF_PROCESSES_TO_GENERATE = parameters.getNumbersOfProcessesToGenerate();
 
+        // initialise runtime information
         Information.RuntimeInformation.setProcessesRemaining(IntStream.of(NUMBERS_OF_PROCESSES_TO_GENERATE).sum());
-        System.out.println("s = " + Information.RuntimeInformation.getProcessesRemaining());
 
         final ProcessGeneratorManager[] generatorManagers = new ProcessGeneratorManager[NUMBER_OF_PROCESSES];
         final BasicProcessorManager[] processorManagers = new BasicProcessorManager[NUMBER_OF_PROCESSES];
@@ -42,9 +42,10 @@ public final class Lab2Initialiser {
             final Processor processor = new BasicProcessor(getRandomId(), getRandomTimeInSeconds());
             final Generator<Process> generator = new ProcessGenerator(getRandomId());
             final Deque<Process> deque = new LinkedList<>();
+            final Information.Statistics statistics = new Information.Statistics();
 
-            generatorManagers[i] = new ProcessGeneratorManager(generator, NUMBERS_OF_PROCESSES_TO_GENERATE[i], deque);
-            processorManagers[i] = new BasicProcessorManager(processor, deque, generator);
+            generatorManagers[i] = new ProcessGeneratorManager(generator, NUMBERS_OF_PROCESSES_TO_GENERATE[i], deque, statistics);
+            processorManagers[i] = new BasicProcessorManager(processor, deque, generator, statistics);
         }
 
         // fill processors' deques to steal from

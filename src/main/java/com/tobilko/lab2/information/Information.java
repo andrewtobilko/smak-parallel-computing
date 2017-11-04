@@ -23,15 +23,11 @@ public final class Information {
     }
 
     @Getter
+    @Setter
     public static class Statistics {
 
-        @Setter
         private volatile int maxDequeSize;
         private volatile int processesInterrupted;
-
-        public synchronized void incrementProcessesInterrupted() {
-            ++processesInterrupted;
-        }
 
     }
 

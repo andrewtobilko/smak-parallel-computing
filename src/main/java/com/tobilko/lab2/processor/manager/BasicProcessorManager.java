@@ -4,15 +4,14 @@ import com.tobilko.lab2.generator.Generator;
 import com.tobilko.lab2.information.Information;
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.processor.Processor;
-import com.tobilko.lab2.util.RandomUtil;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Deque;
+import java.util.Random;
 
-import static com.tobilko.lab2.util.OutputUtil.OutputColour.GREEN;
-import static com.tobilko.lab2.util.OutputUtil.OutputColour.RED;
-import static com.tobilko.lab2.util.OutputUtil.OutputColour.YELLOW;
+import static com.tobilko.lab2.util.OutputUtil.OutputColour.*;
 import static com.tobilko.lab2.util.OutputUtil.println;
 import static java.lang.String.format;
 
@@ -22,13 +21,16 @@ import static java.lang.String.format;
 @Getter
 public final class BasicProcessorManager extends Thread implements ProcessorManager {
 
-    private final Processor processor;              // to delegate process handling
-    private final Deque<Process> deque;             // to take a process from
+    private final Processor processor;                                      // to delegate process handling
+    private final Deque<Process> deque;                                     // to take a process from
 
     @Setter
-    private Deque<Process>[] deques;                // to steal a process from
+    private Deque<Process>[] deques;                                        // to steal a process from
 
-    public BasicProcessorManager(Processor processor, Deque<Process> deque, Generator<Process> generator) {
+    private final ProcessorManagerLogger logger;                            // to log out all events
+    private final ProcessorManagerStatisticsCaretaker statisticsCaretaker;  // to maintain statistics
+
+    public BasicProcessorManager(Processor processor, Deque<Process> deque, Generator<Process> generator, Information.Statistics statistics) {
         this.processor = processor;
         this.deque = deque;
 
@@ -36,12 +38,16 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
         Thread interrupter = new Thread(new ProcessorManagerInterrupter(generator));
         interrupter.setDaemon(true);
         interrupter.start();
+
+        // initialise inner helpers
+        logger = new ProcessorManagerLogger();
+        statisticsCaretaker = new ProcessorManagerStatisticsCaretaker(statistics);
     }
 
 
     @Override
     public void run() {
-        BasicProcessorManagerLogger.logProcessorManagerStart(this);
+        logger.logProcessorManagerStart();
 
         while (isThereAnyProcessesAvailable()) {
 
@@ -54,7 +60,7 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
 
             if (process == null) {
                 if (deques == null || deques.length == 0) {
-                    BasicProcessorManagerLogger.logWorkStealingFailure(this);
+                    logger.logWorkStealingFailure();
                     System.out.println(String.format("%s couldn't steal a process since it didn't have deques.", this));
                 }
                 Random random = new Random();
@@ -84,6 +90,8 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
                 } catch (InterruptedException e) {
                     System.err.println("INTERRUPTER has found OUR process waiting in the queue. LET'S execute it!");
 
+                    statisticsCaretaker.incrementProcessesInterrupted();
+
                     synchronized (dequeToStealFrom) {
                         dequeToStealFrom.addFirst(alienProcess);
                     }
@@ -100,7 +108,8 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
 
         }
 
-        BasicProcessorManagerLogger.logProcessorManagerFinish(this);
+        logger.logProcessorManagerFinish();
+        logger.logStatistics(statisticsCaretaker.getStatistics());
     }
 
     private boolean isThereAnyProcessesAvailable() {
@@ -116,19 +125,44 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
         return format("Processor Manager [%s]", processor);
     }
 
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class BasicProcessorManagerLogger {
+    private class ProcessorManagerLogger {
 
-        public static void logProcessorManagerStart(BasicProcessorManager manager) {
-            println(GREEN, "%s is gonna start processing.", manager);
+        public void logProcessorManagerStart() {
+            println(GREEN, "%s is gonna start processing.", BasicProcessorManager.this);
         }
 
-        public static void logProcessorManagerFinish(BasicProcessorManager manager) {
-            println(RED, "%s finished his work.", manager);
+        public void logProcessorManagerFinish() {
+            println(RED, "%s finished his work.", BasicProcessorManager.this);
         }
-        public static void logWorkStealingFailure(BasicProcessorManager manager) {
-            println(YELLOW,"%s couldn't steal a process since it didn't have deques.", manager);
+
+        public void logWorkStealingFailure() {
+            println(YELLOW, "%s couldn't steal a process since it didn't have deques.", BasicProcessorManager.this);
         }
+
+        public void logStatistics(Information.Statistics statistics) {
+            println(BLACK, "Statistics for %s: processes interrupted - %s, the max deque size - %s",
+                    BasicProcessorManager.this.getProcessor(),
+                    statistics.getProcessesInterrupted(),
+                    statistics.getMaxDequeSize()
+            );
+        }
+
+    }
+
+    @RequiredArgsConstructor
+    private class ProcessorManagerStatisticsCaretaker {
+
+        @Getter
+        private final Information.Statistics statistics;
+
+        public void incrementProcessesInterrupted() {
+
+            synchronized (statistics) {
+                statistics.setProcessesInterrupted(statistics.getProcessesInterrupted() + 1);
+            }
+
+        }
+
     }
 
     @RequiredArgsConstructor
@@ -164,12 +198,4 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
 
     }
 
-}
-
-class A
-{
-    public static String[] a;
-    public static void main(String[] args) {
-        System.out.println(a.length);
-    }
 }

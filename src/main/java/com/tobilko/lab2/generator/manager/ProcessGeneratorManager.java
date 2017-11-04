@@ -1,10 +1,10 @@
 package com.tobilko.lab2.generator.manager;
 
 import com.tobilko.lab2.generator.Generator;
+import com.tobilko.lab2.information.Information;
 import com.tobilko.lab2.process.Process;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.util.Deque;
@@ -21,13 +21,20 @@ import static java.lang.String.format;
 @Getter
 public final class ProcessGeneratorManager implements GeneratorManager<Generator<Process>> {
 
-    private final Generator<Process> generator; // a mechanism to generate processes by
-    private final int limit;                    // a number of processes to generate
-    private final Deque<Process> deque;         // a place where generated processes will be placed in
+    private final Generator<Process> generator;                                         // a mechanism to generate processes by
+    private final int limit;                                                            // a number of processes to generate
+    private final Deque<Process> deque;                                                 // a place where generated processes will be placed in
 
-    public ProcessGeneratorManager(Generator<Process> generator, int limit, Deque<Process> deque) {
+    private final ProcessGeneratorManagerLogger logger;                                 // to log everything happened in the manager
+    private final ProcessGeneratorManagerStatisticsCaretaker statisticsCaretaker;       // to maintain statistics
+
+    public ProcessGeneratorManager(Generator<Process> generator, int limit, Deque<Process> deque, Information.Statistics statistics) {
         this.generator = generator;
         this.deque = deque;
+
+        // initialise inner helpers
+        logger = new ProcessGeneratorManagerLogger();
+        statisticsCaretaker = new ProcessGeneratorManagerStatisticsCaretaker(statistics);
 
         validateLimit(this.limit = limit);
     }
@@ -40,7 +47,7 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
 
     @Override
     public final void run() {
-        ProcessGeneratorManagerLogger.logManagerStart(this);
+        logger.logManagerStart();
 
         int remainingNumberOfProcessesToGenerate = limit;
 
@@ -61,17 +68,18 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
             sleepTillNextGeneration(process.getTimeToNextGeneration());
         }
 
-        ProcessGeneratorManagerLogger.logManagerFinish(this);
+        logger.logManagerFinish();
     }
 
     private void addProcessToQueue(Process process) {
         validateProcess(process);
 
         synchronized (deque) {
-            deque.offerLast(process);
+            deque.addLast(process);
+            statisticsCaretaker.recalculateMaxQueueSizeByCurrentDequeSize(deque.size());
         }
 
-        ProcessGeneratorManagerLogger.logProcessAdding(this, process);
+        logger.logProcessAdded(process);
     }
 
     private void validateProcess(Process process) {
@@ -100,19 +108,31 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
         return format("Generator Manager [%s]", generator);
     }
 
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class ProcessGeneratorManagerLogger {
+    private class ProcessGeneratorManagerLogger {
 
-        private static void logManagerStart(ProcessGeneratorManager manager) {
-            println(GREEN, "%s is about to start generating.", manager);
+        private void logManagerStart() {
+            println(GREEN, "%s is about to start generating.", ProcessGeneratorManager.this);
         }
 
-        private static void logManagerFinish(ProcessGeneratorManager manager) {
-            println(RED, "%s is about to finish generating.", manager);
+        private void logManagerFinish() {
+            println(RED, "%s is about to finish generating.", ProcessGeneratorManager.this);
         }
 
-        private static void logProcessAdding(ProcessGeneratorManager manager, Process process) {
-            println(YELLOW, "%s: %s was added to the queue!", manager, process);
+        private void logProcessAdded(Process process) {
+            println(YELLOW, "%s: %s was added to the queue!", ProcessGeneratorManager.this, process);
+        }
+
+    }
+
+    @RequiredArgsConstructor
+    private class ProcessGeneratorManagerStatisticsCaretaker {
+
+        private final Information.Statistics statistics;
+
+        public void recalculateMaxQueueSizeByCurrentDequeSize(int currentSize) {
+            if (statistics.getMaxDequeSize() < currentSize) {
+                statistics.setMaxDequeSize(currentSize);
+            }
         }
 
     }
