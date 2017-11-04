@@ -4,16 +4,18 @@ import com.tobilko.lab2.generator.Generator;
 import com.tobilko.lab2.information.Information;
 import com.tobilko.lab2.process.Process;
 import com.tobilko.lab2.processor.Processor;
+import com.tobilko.lab2.util.RandomUtil;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.SneakyThrows;
 
 import java.util.Deque;
-import java.util.Random;
 
 import static com.tobilko.lab2.util.OutputUtil.OutputColour.*;
 import static com.tobilko.lab2.util.OutputUtil.println;
 import static java.lang.String.format;
+import static java.util.Objects.isNull;
 
 /**
  * Created by Andrew Tobilko on 10/16/17.
@@ -44,80 +46,95 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
         statisticsCaretaker = new ProcessorManagerStatisticsCaretaker(statistics);
     }
 
-
     @Override
     public void run() {
         logger.logProcessorManagerStart();
 
         while (isThereAnyProcessesAvailable()) {
 
-            Process process = null;
-            synchronized (deque) {
-                if (!deque.isEmpty()) {
-                    process = deque.pollFirst();
-                }
-            }
+            final Process ownProcess = getProcessFromDeque(deque);
 
-            if (process == null) {
-                if (deques == null || deques.length == 0) {
-                    logger.logWorkStealingFailure();
-                    System.out.println(String.format("%s couldn't steal a process since it didn't have deques.", this));
-                }
-                Random random = new Random();
-
-                int randomIndex = random.nextInt(deques.length);
-
-                final Deque<Process> dequeToStealFrom = deques[randomIndex];
-                Process alienProcess = null;
-                synchronized (dequeToStealFrom) {
-                    if (!dequeToStealFrom.isEmpty()) {
-                        alienProcess = dequeToStealFrom.pollFirst();
-                    }
-                }
-
-                if (alienProcess == null) {
-                    continue;
-                }
-
-                try {
-                    synchronized (this) {
-                        this.notify();
-                    }
-                    System.err.println("starting to execute a stolen process");
-                    processor.process(alienProcess);
-                    decrementProcessesRemainingCounter();
-                    System.err.println("ending to execute a stolen process");
-                } catch (InterruptedException e) {
-                    System.err.println("INTERRUPTER has found OUR process waiting in the queue. LET'S execute it!");
-
-                    statisticsCaretaker.incrementProcessesInterrupted();
-
-                    synchronized (dequeToStealFrom) {
-                        dequeToStealFrom.addFirst(alienProcess);
-                    }
-                }
-
+            if (isNull(ownProcess)) {
+                performWorkStealing();
             } else {
-                try {
-                    processor.process(process);
-                    decrementProcessesRemainingCounter();
-                } catch (InterruptedException e) {
-                    System.err.println("Someone interrupted the processor which was executing ITS OWN process. NO WAY!");
-                }
+                executeProcessWithFailureCallback(ownProcess, logger::logFailureAtOwnProcessExecution);
             }
-
         }
 
         logger.logProcessorManagerFinish();
         logger.logStatistics(statisticsCaretaker.getStatistics());
     }
 
+    private Process getProcessFromDeque(Deque<Process> deque) {
+        Process process = null;
+
+        synchronized (deque) {
+            if (!deque.isEmpty()) {
+                process = deque.pollFirst();
+            }
+        }
+
+        return process;
+    }
+
+    private void performWorkStealing() {
+        if (!canWorkingStealingBePerformed()) {
+            return;
+        }
+
+        final Deque<Process> deque = selectRandomDequeFromArray(deques);
+        final Process process = getProcessFromDeque(deque);
+
+        // the random deque has no processes
+        if (isNull(process)) {
+            return;
+        }
+
+        // notify the interrupter
+        synchronized (this) {
+            this.notify();
+        }
+
+        executeProcessWithFailureCallback(process, () -> handleFailureAtStolenProcessExecution(deque, process));
+    }
+
+    private boolean canWorkingStealingBePerformed() {
+        if (deques == null || deques.length == 0) {
+            logger.logWorkStealingFailure();
+            return false;
+        }
+
+        return true;
+    }
+
+    private Deque<Process> selectRandomDequeFromArray(Deque<Process>[] deques) {
+        return deques[RandomUtil.getRandomIntBetween(0, deques.length)];
+    }
+
+    private void executeProcessWithFailureCallback(Process process, Runnable failureCallback) {
+        try {
+            processor.process(process);
+            Information.RuntimeInformation.decrementProcessesRemaining();
+        } catch (InterruptedException exception) {
+            failureCallback.run();
+        }
+    }
+
     private boolean isThereAnyProcessesAvailable() {
         return Information.RuntimeInformation.getProcessesRemaining() > 0;
     }
 
-    private void decrementProcessesRemainingCounter() {
-        Information.RuntimeInformation.decrementProcessesRemaining();
+    private void handleFailureAtStolenProcessExecution(Deque<Process> stolenFrom, Process stolenProcess) {
+        logger.logFailureAtStolenProcessExecution();
+        statisticsCaretaker.incrementProcessesInterrupted();
+
+        putProcessBackToDeque(stolenFrom, stolenProcess);
+    }
+
+    private void putProcessBackToDeque(Deque<Process> source, Process stolenProcess) {
+        synchronized (source) {
+            source.addFirst(stolenProcess);
+        }
     }
 
     @Override
@@ -147,6 +164,14 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
             );
         }
 
+        public void logFailureAtOwnProcessExecution() {
+            println(RED, "Someone interrupted the processor which was executing ITS OWN process. NO WAY!"); // TODO: 11/5/17
+        }
+
+        public void logFailureAtStolenProcessExecution() {
+            println(RED, "INTERRUPTER has found OUR process waiting in the queue. LET'S execute it!"); // TODO: 11/5/17
+        }
+
     }
 
     @RequiredArgsConstructor
@@ -171,27 +196,21 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
         private final Object monitor;
 
         @Override
+        @SneakyThrows
         public void run() {
 
             while (true) {
-                // wait
-                try {
-                    // wait for the manager
-                    synchronized (BasicProcessorManager.this) {
-                        BasicProcessorManager.this.wait();
-                    }
-
-                    // wait for the monitor
-                    synchronized (monitor) {
-                        monitor.wait();
-                    }
-                    // interrupt the manager
-                    BasicProcessorManager.this.interrupt();
-                    System.err.println("interrupted");
-                } catch (InterruptedException e) {
-                    println(RED, "Someone interrupted the interrupter...");
+                // wait for the manager
+                synchronized (BasicProcessorManager.this) {
+                    BasicProcessorManager.this.wait();
                 }
 
+                // wait for the monitor
+                synchronized (monitor) {
+                    monitor.wait();
+                }
+                // interrupt the manager
+                BasicProcessorManager.this.interrupt();
             }
 
         }

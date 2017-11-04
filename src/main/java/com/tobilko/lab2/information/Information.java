@@ -10,9 +10,15 @@ public final class Information {
 
     public static class RuntimeInformation {
 
-        @Getter
-        @Setter
-        private static volatile int processesRemaining;
+        private static int processesRemaining;
+
+        public static synchronized void setProcessesRemaining(int value) {
+            processesRemaining = value;
+        }
+
+        public static synchronized int getProcessesRemaining() {
+            return processesRemaining;
+        }
 
         public static synchronized void decrementProcessesRemaining() {
             --processesRemaining;

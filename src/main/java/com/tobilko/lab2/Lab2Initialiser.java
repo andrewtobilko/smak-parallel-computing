@@ -11,6 +11,7 @@ import com.tobilko.lab2.processor.manager.BasicProcessorManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,6 +41,7 @@ public final class Lab2Initialiser {
         // initialise managers
         for (int i = 0; i < NUMBER_OF_PROCESSES; ++i) {
             final Processor processor = new BasicProcessor(getRandomId(), getRandomTimeInSeconds());
+            //final Processor processor = new BasicProcessor(getRandomId(), 10);
             final Generator<Process> generator = new ProcessGenerator(getRandomId());
             final Deque<Process> deque = new LinkedList<>();
             final Information.Statistics statistics = new Information.Statistics();
@@ -63,7 +65,7 @@ public final class Lab2Initialiser {
 
         // start managers
         for (int i = 0; i < NUMBER_OF_PROCESSES; ++i) {
-            new Thread(processorManagers[i]).start();
+            processorManagers[i].start();
             new Thread(generatorManagers[i]).start();
         }
 
