@@ -1,6 +1,6 @@
 # "Java Concurrency in practice" recap #
 
-## Thread safety
+## Thread Safety
 
 ##### Introduction
 
@@ -80,7 +80,7 @@ The program is broken if multiple threads access the same mutable state variable
 - synchronisation blocks should be "short enough" rather than "too small"
 
 
-## Sharing objects
+## Sharing Objects
 
 ##### Visibility
 
@@ -131,6 +131,42 @@ The program is broken if multiple threads access the same mutable state variable
     
 - use volatile to publish immutable objects
     - immutable objects provide some kind of atomicity
-    - immutable object illuminate race conditions
+    - immutable objects illuminate race conditions
     - the assignment operator is an atomic one
-    - TODO
+- use immutable objects properly:
+    - all fields are final
+    - proper construction
+    - unmodifiable state
+    - final fields do not refer to mutable objects
+- safe publication idioms
+    - a properly constructed object can be safely published by:
+        - a static initialiser (often is public as well)
+        - a volatile field or an AtomicReference
+        - a final field
+        - a field that is properly guarded by a
+    - JDK safe publications:
+        - placing a key or value in a Hashtable, synchronizedMap, or ConcurrentMap
+        - placing an element in a CopyOnWriteArrayList, CopyOnWriteArraySet, synchronizedList, or synchronizedSet
+        - placing an element on a BlockingQueue or a ConcurrentLinkedQueue
+    - effectively immutable objects:
+        - their state will not be modified after publication
+        - can be used without additional synchronization
+    - mutable objects:
+        - synchronisation mush be used not only to publish an object
+        - synchronisation mush be used every time an object is accessed
+
+##### Sharing objects safely
+
+- **thread-confined** = a thread-confined object is **owned exclusively by and confined to one thread**, and can be modified by its owning thread. 
+- **shared read-only** = **immutable and effectively immutable objects** can be accessed concurrently by multiple threads without additional synchronization, **but cannot be modified by any thread**.
+- **shared thread-safe** = a thread-safe object performs synchronization **internally**, threads don't need synchronization through its public interface.
+- **guarded** = a guarded object can be accessed only with **a specific lock held**.
+
+
+## Composing Objects
+
+- Designing a thread-safe class
+- Instance confinement
+- Delegating a thread-safety
+- Additional functionality to existing thread-safe classes 
+- documenting synchronization policies
