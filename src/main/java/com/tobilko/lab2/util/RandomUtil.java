@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public final class RandomUtil {
 
     public static final int MIN_SECONDS_BETWEEN_GENERATIONS = 1;
-    public static final int MAX_SECONDS_BETWEEN_GENERATIONS = 5;
+    public static final int MAX_SECONDS_BETWEEN_GENERATIONS = 11;
 
     public static int getRandomId() {
         return getRandomIntBetween(100, 1000);

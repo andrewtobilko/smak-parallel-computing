@@ -165,11 +165,11 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
         }
 
         public void logFailureAtOwnProcessExecution() {
-            println(RED, "Someone interrupted the processor which was executing ITS OWN process. NO WAY!"); // TODO: 11/5/17
+            println(RED, "The interrupter has interrupted a processor executing own process.");
         }
 
         public void logFailureAtStolenProcessExecution() {
-            println(RED, "INTERRUPTER has found OUR process waiting in the queue. LET'S execute it!"); // TODO: 11/5/17
+            println(RED, "The interrupter has interrupted executing. A new process was generated for that processor.");
         }
 
     }
