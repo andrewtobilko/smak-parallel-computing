@@ -10,7 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.tobilko.lab2.util.OutputUtil.OutputColour.*;
 import static com.tobilko.lab2.util.OutputUtil.println;
@@ -57,7 +61,15 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
             if (isNull(ownProcess)) {
                 performWorkStealing();
             } else {
-                executeProcessWithFailureCallback(ownProcess, logger::logFailureAtOwnProcessExecution);
+                // executeProcessWithFailureCallback(ownProcess, logger::logFailureAtOwnProcessExecution);
+                executeProcessWithFailureCallback(ownProcess, () -> {
+                    logger.logFailureAtOwnProcessExecution();
+                    try {
+                        processor.process(ownProcess);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         }
 
@@ -165,11 +177,13 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
         }
 
         public void logFailureAtOwnProcessExecution() {
-            println(RED, "The interrupter has interrupted a processor executing own process.");
+            println(RED, "The interrupter of %s has interrupted a processor executing own process.",
+                    BasicProcessorManager.this.getProcessor());
         }
 
         public void logFailureAtStolenProcessExecution() {
-            println(RED, "The interrupter has interrupted executing. A new process was generated for that processor.");
+            println(RED, "The interrupter of %s has interrupted executing. A new process was generated for that processor.",
+                    BasicProcessorManager.this.getProcessor());
         }
 
     }
@@ -206,14 +220,25 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
                     BasicProcessorManager.this.wait();
                 }
 
+                final long waitingStartTime = System.currentTimeMillis();
+
                 // wait for the monitor
                 synchronized (monitor) {
                     monitor.wait();
                 }
+
                 // interrupt the manager
-                threadToInterrupt.interrupt();
+                if (shouldBeInterruptedAtThisTime(waitingStartTime)) {
+                    threadToInterrupt.interrupt();
+                }
             }
 
+        }
+
+        private boolean shouldBeInterruptedAtThisTime(long waitingStartTime) {
+            final int processorTime = BasicProcessorManager.this.getProcessor().getProcessingTime();
+
+            return ((System.currentTimeMillis() - waitingStartTime) / 1000) < processorTime;
         }
 
     }
