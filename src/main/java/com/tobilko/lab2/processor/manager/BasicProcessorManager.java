@@ -181,11 +181,7 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
         private final Information.Statistics statistics;
 
         public void incrementProcessesInterrupted() {
-
-            synchronized (statistics) {
-                statistics.setProcessesInterrupted(statistics.getProcessesInterrupted() + 1);
-            }
-
+            statistics.incrementProcessesInterrupted();
         }
 
     }

@@ -1,8 +1,5 @@
 package com.tobilko.lab2.information;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Created by Andrew Tobilko on 11/1/17.
  */
@@ -28,12 +25,29 @@ public final class Information {
 
     }
 
-    @Getter
-    @Setter
     public static class Statistics {
 
-        private volatile int maxDequeSize;
-        private volatile int processesInterrupted;
+        private int maxDequeSize;
+        private int processesInterrupted;
+
+        // processesInterrupted
+        public synchronized void incrementProcessesInterrupted() {
+            ++processesInterrupted;
+        }
+
+        public synchronized int getProcessesInterrupted() {
+            return processesInterrupted;
+        }
+
+
+        // maxDequeSize
+        public synchronized int getMaxDequeSize() {
+            return maxDequeSize;
+        }
+
+        public synchronized void setMaxDequeSize(int size) {
+            maxDequeSize = size;
+        }
 
     }
 

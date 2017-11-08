@@ -130,8 +130,10 @@ public final class ProcessGeneratorManager implements GeneratorManager<Generator
         private final Information.Statistics statistics;
 
         public void recalculateMaxQueueSizeByCurrentDequeSize(int currentSize) {
-            if (statistics.getMaxDequeSize() < currentSize) {
-                statistics.setMaxDequeSize(currentSize);
+            synchronized (statistics) {
+                if (currentSize > statistics.getMaxDequeSize()) {
+                    statistics.setMaxDequeSize(currentSize);
+                }
             }
         }
 
