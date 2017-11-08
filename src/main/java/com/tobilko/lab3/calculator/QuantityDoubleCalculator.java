@@ -1,25 +1,23 @@
 package com.tobilko.lab3.calculator;
 
-import lombok.RequiredArgsConstructor;
-
-import java.util.Random;
+import java.util.concurrent.Executor;
 import java.util.function.Predicate;
-import java.util.stream.DoubleStream;
 
 /**
  * Created by Andrew Tobilko on 11/5/17.
  */
-@RequiredArgsConstructor
-public final class QuantityDoubleCalculator implements Runnable {
+public final class QuantityDoubleCalculator extends ExecutorAwareCalculator {
 
     private final Predicate<Double> condition;
 
+    public QuantityDoubleCalculator(final Executor executor, final Predicate<Double> predicate) {
+        super(executor);
+        condition = predicate;
+    }
+
     @Override
     public void run() {
-        final Random random = new Random();
-        long count = DoubleStream.generate(random::nextDouble).parallel().filter(condition::test).count();
-
-        System.out.println("quantity of the stream: " + count);
+        System.out.println("quantity");
     }
 
 }
