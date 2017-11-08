@@ -1,8 +1,5 @@
 package com.tobilko.lab2;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import static com.tobilko.lab2.Lab2Initialiser.InputParameters;
 import static com.tobilko.lab2.Lab2Initialiser.initialise;
 

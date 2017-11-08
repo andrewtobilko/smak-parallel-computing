@@ -1,4 +1,4 @@
-package com.tobilko.lab3;
+package com.tobilko.lab3.calculator;
 
 import lombok.RequiredArgsConstructor;
 

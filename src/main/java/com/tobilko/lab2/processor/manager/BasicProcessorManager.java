@@ -10,11 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
-import java.util.ArrayList;
 import java.util.Deque;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.tobilko.lab2.util.OutputUtil.OutputColour.*;
 import static com.tobilko.lab2.util.OutputUtil.println;
