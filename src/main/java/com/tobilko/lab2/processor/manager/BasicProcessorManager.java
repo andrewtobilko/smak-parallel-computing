@@ -190,10 +190,15 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
 
     }
 
-    @RequiredArgsConstructor
     private class ProcessorManagerInterrupter implements Runnable {
 
         private final Object monitor;
+        private final Thread threadToInterrupt;
+
+        private ProcessorManagerInterrupter(Object instance) {
+            this.monitor = instance;
+            threadToInterrupt = BasicProcessorManager.this;
+        }
 
         @Override
         @SneakyThrows
@@ -210,7 +215,7 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
                     monitor.wait();
                 }
                 // interrupt the manager
-                BasicProcessorManager.this.interrupt();
+                threadToInterrupt.interrupt();
             }
 
         }

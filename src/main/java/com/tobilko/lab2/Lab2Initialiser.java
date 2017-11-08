@@ -41,7 +41,6 @@ public final class Lab2Initialiser {
         // initialise managers
         for (int i = 0; i < NUMBER_OF_PROCESSES; ++i) {
             final Processor processor = new BasicProcessor(getRandomId(), getRandomTimeInSeconds());
-            //final Processor processor = new BasicProcessor(getRandomId(), 10);
             final Generator<Process> generator = new ProcessGenerator(getRandomId());
             final Deque<Process> deque = new LinkedList<>();
             final Information.Statistics statistics = new Information.Statistics();
