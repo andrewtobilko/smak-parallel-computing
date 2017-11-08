@@ -10,11 +10,8 @@ public final class Barber {
 
     private final long haircutTime;
 
-    /*
-        barber ->
-        is anybody in the waiting room ?
-            take one and make a haircut
-            sleep
-     */
+    public void makeHaircut(Customer customer) throws InterruptedException {
+        Thread.sleep(haircutTime * 1000);
+    }
 
 }

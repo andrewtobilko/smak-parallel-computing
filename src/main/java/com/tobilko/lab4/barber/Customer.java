@@ -12,13 +12,4 @@ public final class Customer {
 
     private final Integer id;
 
-    /*
-        customer ->
-        is the barber sleeping ?
-            wake him up and get a haircut
-            is the waiting room full ?
-                leave
-                sit and wait
-     */
-
 }
