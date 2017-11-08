@@ -1,19 +1,16 @@
 package com.tobilko.lab3.calculator;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.Callable;
 
 /**
  * Created by Andrew Tobilko on 11/5/17.
  */
-public final class SumDoubleCalculator extends ExecutorAwareCalculator {
-
-    public SumDoubleCalculator(final Executor executor) {
-        super(executor);
-    }
+public final class SumDoubleCalculator implements Callable<String> {
 
     @Override
-    public void run() {
-        System.out.println("SumDoubleCalculator");
+    public String call() {
+        return "sum";
     }
+
 
 }

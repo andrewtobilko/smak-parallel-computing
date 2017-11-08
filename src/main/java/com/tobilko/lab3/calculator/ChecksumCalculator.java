@@ -1,19 +1,15 @@
 package com.tobilko.lab3.calculator;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.Callable;
 
 /**
  * Created by Andrew Tobilko on 11/8/17.
  */
-public final class ChecksumCalculator extends ExecutorAwareCalculator {
-
-    public ChecksumCalculator(final Executor executor) {
-        super(executor);
-    }
+public final class ChecksumCalculator implements Callable<String> {
 
     @Override
-    public void run() {
-        System.out.println("checksum");
+    public String call() {
+        return "checksum";
     }
 
 }
