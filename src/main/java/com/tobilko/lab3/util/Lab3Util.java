@@ -8,6 +8,8 @@ import java.util.concurrent.Future;
  */
 public final class Lab3Util {
 
+    public static final int MAX_STREAM_SIZE = 10000;
+
     public static <T> T sneakyThrows(Future<T> future) {
         try {
             return future.get();
@@ -16,4 +18,5 @@ public final class Lab3Util {
         }
         return null;
     }
+
 }

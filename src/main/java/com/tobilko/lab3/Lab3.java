@@ -1,14 +1,12 @@
 package com.tobilko.lab3;
 
-import com.tobilko.lab3.calculator.ChecksumCalculator;
-import com.tobilko.lab3.calculator.MinMaxCalculator;
-import com.tobilko.lab3.calculator.QuantityDoubleCalculator;
-import com.tobilko.lab3.calculator.SumDoubleCalculator;
+import com.tobilko.lab3.calculator.*;
 import com.tobilko.lab3.util.Lab3Util;
 import lombok.SneakyThrows;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -20,15 +18,18 @@ public final class Lab3 {
     @SneakyThrows
     public static void main(String[] args) {
 
-        final Predicate<Double> CONDITION = d -> d > 100;
-        final ExecutorService executorService = Executors.newFixedThreadPool(5);
+        final int DEFAULT_POOL_SIZE = 5;
+        final Predicate<Integer> CONDITION = d -> d > 0;
+
+        final ExecutorService executorService = Executors.newFixedThreadPool(DEFAULT_POOL_SIZE);
 
         Stream.of(
 
-                new SumDoubleCalculator(),                          // sum
-                new QuantityDoubleCalculator(CONDITION),            // quantity of elements by condition
-                new MinMaxCalculator(),                             // min and max with indices
-                new ChecksumCalculator()                            // checksum using xor
+                new SumCalculator(DEFAULT_POOL_SIZE),                       // sum
+                new QuantityCalculator(DEFAULT_POOL_SIZE, CONDITION),       // quantity of elements by condition
+                new MinCalculator(DEFAULT_POOL_SIZE),                       // min with index
+                new MaxCalculator(DEFAULT_POOL_SIZE),                       // max with index
+                new ChecksumCalculator(DEFAULT_POOL_SIZE)                   // checksum using xor
 
         )
                 .map(executorService::submit)
@@ -37,6 +38,7 @@ public final class Lab3 {
 
 
         executorService.shutdown();
+        executorService.awaitTermination(1, TimeUnit.MINUTES);
     }
 
 }
