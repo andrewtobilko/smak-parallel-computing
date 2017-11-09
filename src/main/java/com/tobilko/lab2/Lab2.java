@@ -9,8 +9,8 @@ import static com.tobilko.lab2.Lab2Initialiser.initialise;
 public final class Lab2 {
 
     public static void main(String[] args) {
-        final int NUMBER_OF_PROCESSORS = 5;
-        final int[] NUMBERS_OF_PROCESSES_TO_GENERATE = {2, 20, 10, 5, 12};
+        final int NUMBER_OF_PROCESSORS = 2;
+        final int[] NUMBERS_OF_PROCESSES_TO_GENERATE = {2, 20};
 
         initialise(InputParameters.of(NUMBER_OF_PROCESSORS, NUMBERS_OF_PROCESSES_TO_GENERATE));
     }

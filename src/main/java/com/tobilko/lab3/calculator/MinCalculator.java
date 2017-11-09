@@ -18,6 +18,11 @@ public final class MinCalculator extends AbstractCalculator {
         return calculateMinElementIndex(array, startingPosition, endingPosition, accumulator);
     }
 
+    @Override
+    public String mapAccumulatorToOutputString(AtomicLong accumulator) {
+        return format("Min = array[%d] = %d", accumulator.get(), getArray()[(int) accumulator.get()]);
+    }
+
     private Runnable calculateMinElementIndex(int[] array, int startingPosition, int endingPosition, AtomicLong accumulator) {
         return () -> {
             for (int i = startingPosition; i < endingPosition; i++) {
@@ -29,11 +34,6 @@ public final class MinCalculator extends AbstractCalculator {
                 }
             }
         };
-    }
-
-    @Override
-    public String mapAccumulatorToOutputString(AtomicLong accumulator) {
-        return format("Min = array[%d] = %d", accumulator.get(), getArray()[(int) accumulator.get()]);
     }
 
 }

@@ -18,6 +18,11 @@ public final class MaxCalculator extends AbstractCalculator {
         return calculateMaxElementIndex(array, start, end, accumulator);
     }
 
+    @Override
+    public String mapAccumulatorToOutputString(AtomicLong accumulator) {
+        return format("Max = array[%d] = %d", accumulator.get(), getArray()[(int) accumulator.get()]);
+    }
+
     private Runnable calculateMaxElementIndex(int[] array, int start, int end, AtomicLong accumulator) {
         return () -> {
             for (int i = start; i < end; i++) {
@@ -29,11 +34,6 @@ public final class MaxCalculator extends AbstractCalculator {
                 }
             }
         };
-    }
-
-    @Override
-    public String mapAccumulatorToOutputString(AtomicLong accumulator) {
-        return format("Max = array[%d] = %d", accumulator.get(), getArray()[(int) accumulator.get()]);
     }
 
 }
