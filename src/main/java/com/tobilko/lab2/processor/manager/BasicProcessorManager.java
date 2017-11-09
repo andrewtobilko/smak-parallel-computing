@@ -57,15 +57,7 @@ public final class BasicProcessorManager extends Thread implements ProcessorMana
             if (isNull(ownProcess)) {
                 performWorkStealing();
             } else {
-                // executeProcessWithFailureCallback(ownProcess, logger::logFailureAtOwnProcessExecution);
-                executeProcessWithFailureCallback(ownProcess, () -> {
-                    logger.logFailureAtOwnProcessExecution();
-                    try {
-                        processor.process(ownProcess);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                });
+                 executeProcessWithFailureCallback(ownProcess, logger::logFailureAtOwnProcessExecution);
             }
         }
 

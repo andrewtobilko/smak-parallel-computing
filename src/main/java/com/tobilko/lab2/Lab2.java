@@ -10,7 +10,7 @@ public final class Lab2 {
 
     public static void main(String[] args) {
         final int NUMBER_OF_PROCESSORS = 2;
-        final int[] NUMBERS_OF_PROCESSES_TO_GENERATE = {2, 20};
+        final int[] NUMBERS_OF_PROCESSES_TO_GENERATE = {5, 10};
 
         initialise(InputParameters.of(NUMBER_OF_PROCESSORS, NUMBERS_OF_PROCESSES_TO_GENERATE));
     }
