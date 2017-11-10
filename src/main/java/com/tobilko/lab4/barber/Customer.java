@@ -1,5 +1,6 @@
 package com.tobilko.lab4.barber;
 
+import com.tobilko.lab2.util.Identifiable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -8,7 +9,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public final class Customer {
+public final class Customer implements Identifiable<Integer> {
 
     private final Integer id;
 
