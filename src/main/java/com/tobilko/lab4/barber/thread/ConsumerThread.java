@@ -1,7 +1,7 @@
 package com.tobilko.lab4.barber.thread;
 
 import com.tobilko.lab2.generator.Generator;
-import com.tobilko.lab4.barber.Barbershop;
+import com.tobilko.lab4.barber.entity.Barbershop;
 import com.tobilko.lab4.barber.entity.BarberCustomer;
 import lombok.RequiredArgsConstructor;
 

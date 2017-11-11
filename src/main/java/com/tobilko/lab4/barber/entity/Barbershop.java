@@ -1,10 +1,5 @@
-package com.tobilko.lab4.barber;
+package com.tobilko.lab4.barber.entity;
 
-import com.tobilko.lab4.barber.entity.Barber;
-import com.tobilko.lab4.barber.entity.BarberChair;
-import com.tobilko.lab4.barber.entity.BarberCustomer;
-import com.tobilko.lab4.barber.thread.BarberThread;
-import com.tobilko.lab4.barber.thread.ConsumerThread;
 import com.tobilko.lab4.barber.util.LockWithCondition;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,24 +23,15 @@ public final class Barbershop {
     private final BlockingQueue<BarberCustomer> room;
 
     public static Barbershop createStandardBarbershop() {
+        // TODO: 11/11/17 ??? 2
         final Lock chairLock = new ReentrantLock();
         final Condition newCustomerCame = chairLock.newCondition();
 
-        final BarberChair chair = new BarberChair(LockWithCondition.of(chairLock, newCustomerCame));
-        final Barber barber = new Barber(getRandomTimeInSeconds());
-
         return new Barbershop(
-                null,
-                null,
+                new BarberChair(LockWithCondition.of(chairLock, newCustomerCame)),
+                new Barber(getRandomTimeInSeconds()),
                 new ArrayBlockingQueue<>(WAITING_ROOM_CAPACITY)
         );
-    }
-
-    public static void main(String[] args) {
-        final Barbershop barbershop = Barbershop.createStandardBarbershop();
-
-        new BarberThread(barbershop).start();
-        new ConsumerThread(barbershop).start();
     }
 
 }

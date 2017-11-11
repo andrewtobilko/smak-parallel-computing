@@ -1,13 +1,10 @@
 package com.tobilko.lab4.barber.thread;
 
-import com.tobilko.lab4.barber.Barbershop;
-import com.tobilko.lab4.barber.entity.Barber;
+import com.tobilko.lab4.barber.entity.Barbershop;
 import com.tobilko.lab4.barber.entity.BarberCustomer;
 import lombok.RequiredArgsConstructor;
 
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
 
 import static com.tobilko.lab4.barber.util.BarberUtil.ClientCounter.getNumberOfClientsExpected;
 import static com.tobilko.lab4.barber.util.BarberUtil.TIME_TO_WAIT_FOR_A_NEW_CUSTOMER;
