@@ -15,7 +15,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class BarberUtil {
 
     public static final int WAITING_ROOM_CAPACITY = 5;
-    public static final int TIME_TO_WAIT_FOR_A_NEW_CUSTOMER = 5;
+    public static final int TIME_TO_WAIT_FOR_A_NEW_CUSTOMER_FROM_OUTSIDE = 5;
+    public static final int TIME_TO_WAIT_FOR_A_NEW_CUSTOMER_FROM_THE_LINE = 5;
 
     @SneakyThrows
     public static void simulateClientDelay() {
