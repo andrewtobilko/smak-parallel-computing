@@ -1,4 +1,4 @@
-package com.tobilko.lab4.barber;
+package com.tobilko.lab4.barber.entity;
 
 import com.tobilko.lab4.barber.util.LockWithCondition;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +23,7 @@ public final class BarberChair {
         notifyBarberAboutCondition();
     }
 
+    // TODO: 11/11/17 throw up
     private void notifyBarberAboutCondition() {
         final Lock lock = lockWithCondition.getLock();
 

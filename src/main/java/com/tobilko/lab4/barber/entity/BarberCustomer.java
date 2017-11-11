@@ -1,4 +1,4 @@
-package com.tobilko.lab4.barber;
+package com.tobilko.lab4.barber.entity;
 
 import com.tobilko.lab2.util.Identifiable;
 import lombok.Getter;
