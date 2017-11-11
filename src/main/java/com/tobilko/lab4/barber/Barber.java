@@ -10,8 +10,13 @@ public final class Barber {
 
     private final long haircutTime;
 
-    public void makeHaircut(Customer customer) throws InterruptedException {
+    public void makeHaircut(BarberCustomer customer) throws InterruptedException {
+        logCustomer(customer);
         Thread.sleep(haircutTime * 1000);
+    }
+
+    private void logCustomer(BarberCustomer customer) {
+        System.out.printf("%s is cutting %s's hair...", Barber.class.getSimpleName(), customer);
     }
 
 }
