@@ -4,6 +4,8 @@ import com.tobilko.lab2.util.Identifiable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import static java.lang.String.*;
+
 /**
  * Created by Andrew Tobilko on 11/5/17.
  */
@@ -20,6 +22,11 @@ public final class BarberCustomer implements Identifiable<Integer> {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return format("%s [%d]", BarberCustomer.class.getSimpleName(), id);
     }
 
 }

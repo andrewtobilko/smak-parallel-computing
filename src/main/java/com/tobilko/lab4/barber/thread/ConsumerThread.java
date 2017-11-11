@@ -30,10 +30,10 @@ public final class ConsumerThread extends Thread { // TODO: 11/11/17 thread
 
         do {
             final BarberCustomer customer = generator.generate();
-            System.out.printf("%s is coming...", customer);
+            System.out.printf("%s is coming...\n", customer);
 
             if (!customer.tryToSitOnChair(barbershop.getChair())) {
-                if (!barbershop.getRoom().offer(customer)) {
+                if (!barbershop.getRoom().getLine().offer(customer)) {
                     System.out.println("I can't stand it! I am leaving!");
                 }
             }

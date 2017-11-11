@@ -4,10 +4,7 @@ import com.tobilko.lab4.barber.entity.Barbershop;
 import com.tobilko.lab4.barber.entity.BarberCustomer;
 import lombok.RequiredArgsConstructor;
 
-import java.util.concurrent.TimeUnit;
-
 import static com.tobilko.lab4.barber.util.BarberUtil.ClientCounter.getNumberOfClientsExpected;
-import static com.tobilko.lab4.barber.util.BarberUtil.TIME_TO_WAIT_FOR_A_NEW_CUSTOMER;
 
 /**
  * barber ->
@@ -17,8 +14,10 @@ import static com.tobilko.lab4.barber.util.BarberUtil.TIME_TO_WAIT_FOR_A_NEW_CUS
  *
  * Created by Andrew Tobilko on 11/11/17.
  */
+// TODO: 11/11/17 thread
+// TODO: 11/11/17 exceptions
 @RequiredArgsConstructor
-public final class BarberThread extends Thread { // TODO: 11/11/17 thread
+public final class BarberThread extends Thread {
 
     private final Barbershop barbershop;
 
@@ -29,7 +28,10 @@ public final class BarberThread extends Thread { // TODO: 11/11/17 thread
             final BarberCustomer customer;
             try {
 
-                customer = barbershop.getRoom().poll(TIME_TO_WAIT_FOR_A_NEW_CUSTOMER, TimeUnit.MINUTES);
+                if (barbershop.getRoom().isEmpty()) {
+                    // TODO: 11/11/17  get a lock from barbershop and subscribe on the condition
+                }
+                customer = barbershop.getBarber().tryToCallInCustomerFromWaitingRoom(barbershop.getRoom());
                 try {
                     barbershop.getBarber().makeHaircut(customer);
                 } catch (InterruptedException e) {
