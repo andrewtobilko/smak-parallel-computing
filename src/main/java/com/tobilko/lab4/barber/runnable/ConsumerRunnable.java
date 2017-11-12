@@ -1,4 +1,4 @@
-package com.tobilko.lab4.barber.thread;
+package com.tobilko.lab4.barber.runnable;
 
 import com.tobilko.lab2.generator.Generator;
 import com.tobilko.lab4.barber.entity.*;
@@ -9,17 +9,10 @@ import static com.tobilko.lab4.barber.util.BarberUtil.ClientCounter.getNumberOfC
 import static com.tobilko.lab4.barber.util.BarberUtil.simulateClientDelay;
 
 /**
- * customer ->
- *      is the barber sleeping ?
- *          wake him up and get a haircut
- *          is the waiting room full ?
- *              leave
- *              sit and wait
- *
  * Created by Andrew Tobilko on 11/11/17.
  */
 @RequiredArgsConstructor
-public final class ConsumerThread extends Thread { // TODO: 11/11/17 thread
+public final class ConsumerRunnable implements Runnable {
 
     private final Generator<BarberCustomer> generator = new ConsumerGenerator();
     private final Barbershop barbershop;

@@ -2,8 +2,7 @@ package com.tobilko.lab4.barber.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.concurrent.locks.Lock;
+import lombok.Setter;
 
 /**
  * Created by Andrew Tobilko on 11/11/17.
@@ -12,27 +11,11 @@ import java.util.concurrent.locks.Lock;
 public final class BarberChair {
 
     @Getter
+    @Setter
     private volatile BarberCustomer currentCustomer;
-    private final BarberLock lock;
 
     public boolean isFree() {
         return currentCustomer == null;
-    }
-
-    public void setCurrentCustomer(BarberCustomer currentCustomer) {
-        this.currentCustomer = currentCustomer;
-        notifyBarberAboutCondition();
-    }
-
-    private void notifyBarberAboutCondition() {
-        final Lock lock = this.lock.getLock();
-
-        lock.lock();
-        try {
-            this.lock.getCondition().signal();
-        } finally {
-            lock.unlock();
-        }
     }
 
     public void getChairFree() {

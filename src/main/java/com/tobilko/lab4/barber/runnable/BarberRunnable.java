@@ -1,4 +1,4 @@
-package com.tobilko.lab4.barber.thread;
+package com.tobilko.lab4.barber.runnable;
 
 import com.tobilko.lab4.barber.entity.*;
 import lombok.RequiredArgsConstructor;
@@ -9,17 +9,10 @@ import java.util.concurrent.locks.Lock;
 import static com.tobilko.lab4.barber.util.BarberUtil.ClientCounter.getNumberOfClientsExpected;
 
 /**
- * barber ->
- *      is anybody in the waiting room ?
- *          take one and make a haircut
- *          sleep
- *
  * Created by Andrew Tobilko on 11/11/17.
  */
-// TODO: 11/11/17 thread
-// TODO: 11/11/17 exceptions
 @RequiredArgsConstructor
-public final class BarberThread extends Thread {
+public final class BarberRunnable implements Runnable {
 
     private final Barbershop barbershop;
 
