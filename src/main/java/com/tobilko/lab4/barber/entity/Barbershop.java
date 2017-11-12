@@ -1,13 +1,10 @@
 package com.tobilko.lab4.barber.entity;
 
-import com.tobilko.lab4.barber.util.LockWithCondition;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -22,16 +19,17 @@ public final class Barbershop {
     private final BarberChair chair;
     private final Barber barber;
     private final BarberWaitingRoom waitingRoom;
+    private final BarberLock lock;
 
     public static Barbershop createStandardBarbershop() {
-        // TODO: 11/11/17 ??? 2
         final Lock chairLock = new ReentrantLock();
-        final Condition newCustomerCame = chairLock.newCondition();
+        final BarberLock lock = BarberLock.of(chairLock, chairLock.newCondition());
 
         return new Barbershop(
-                new BarberChair(LockWithCondition.of(chairLock, newCustomerCame)),
+                new BarberChair(lock),
                 new Barber(getRandomId(), getRandomTimeInSeconds()),
-                BarberWaitingRoom.of(new ArrayBlockingQueue<>(WAITING_ROOM_CAPACITY))
+                BarberWaitingRoom.of(new ArrayBlockingQueue<>(WAITING_ROOM_CAPACITY)),
+                lock
         );
     }
 

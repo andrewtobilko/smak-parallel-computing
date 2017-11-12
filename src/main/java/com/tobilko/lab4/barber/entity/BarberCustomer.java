@@ -29,9 +29,8 @@ public final class BarberCustomer implements Identifiable<Integer> {
     }
 
     private void logChairAttempt() {
-        System.out.printf("%s is trying to sit on the chair...", this);
+        System.out.printf("\t\t%s is trying to sit on the chair...\n", this);
     }
-
 
     public boolean tryToJoinTheLine(BlockingQueue<BarberCustomer> line) {
         logLineAttempt();
@@ -40,7 +39,7 @@ public final class BarberCustomer implements Identifiable<Integer> {
     }
 
     private void logLineAttempt() {
-        System.out.printf("%s is trying to join the line...", this);
+        System.out.printf("\t\t%s is trying to join the line...\n", this);
     }
 
     @Override

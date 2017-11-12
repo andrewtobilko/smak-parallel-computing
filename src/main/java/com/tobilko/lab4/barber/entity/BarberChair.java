@@ -1,6 +1,6 @@
 package com.tobilko.lab4.barber.entity;
 
-import com.tobilko.lab4.barber.util.LockWithCondition;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.concurrent.locks.Lock;
@@ -11,8 +11,9 @@ import java.util.concurrent.locks.Lock;
 @RequiredArgsConstructor
 public final class BarberChair {
 
+    @Getter
     private volatile BarberCustomer currentCustomer;
-    private final LockWithCondition lockWithCondition;
+    private final BarberLock lock;
 
     public boolean isFree() {
         return currentCustomer == null;
@@ -24,14 +25,18 @@ public final class BarberChair {
     }
 
     private void notifyBarberAboutCondition() {
-        final Lock lock = lockWithCondition.getLock();
+        final Lock lock = this.lock.getLock();
 
         lock.lock();
         try {
-            lockWithCondition.getCondition().signal();
+            this.lock.getCondition().signal();
         } finally {
             lock.unlock();
         }
+    }
+
+    public void getChairFree() {
+        currentCustomer = null;
     }
 
 }

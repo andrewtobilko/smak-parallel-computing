@@ -34,11 +34,13 @@ public final class ConsumerThread extends Thread { // TODO: 11/11/17 thread
             final BarberCustomer customer = generator.generate();
             System.out.printf("%s is coming...\n", customer);
 
-            if (!customer.tryToSitOnTheChair(chair)) {
+            if (customer.tryToSitOnTheChair(chair)) {
+                System.out.printf("\t\t\t%s sat on the chair!\n", customer);
+            } else {
                 if (customer.tryToJoinTheLine(room.getLine())) {
-                    System.out.println("I can't stand it! I am leaving!");
+                    System.out.printf("\t\t\t%s joined the line.\n", customer);
                 } else {
-                    System.out.println();
+                    System.err.printf("\t\t\tNo free chairs in the waiting room. %s is leaving...\n", customer);
                 }
             }
 

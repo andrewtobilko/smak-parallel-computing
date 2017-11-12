@@ -1,4 +1,4 @@
-package com.tobilko.lab4.barber.util;
+package com.tobilko.lab4.barber.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import java.util.concurrent.locks.Lock;
  */
 @Getter
 @RequiredArgsConstructor(staticName = "of")
-public final class LockWithCondition {
+public final class BarberLock {
 
     private final Lock lock;
     private final Condition condition;
