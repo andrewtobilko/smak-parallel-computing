@@ -1,8 +1,7 @@
 package com.tobilko.lab4.barber.thread;
 
 import com.tobilko.lab2.generator.Generator;
-import com.tobilko.lab4.barber.entity.Barbershop;
-import com.tobilko.lab4.barber.entity.BarberCustomer;
+import com.tobilko.lab4.barber.entity.*;
 import lombok.RequiredArgsConstructor;
 
 import static com.tobilko.lab2.util.RandomUtil.getRandomId;
@@ -28,13 +27,18 @@ public final class ConsumerThread extends Thread { // TODO: 11/11/17 thread
     @Override
     public void run() {
 
+        final BarberChair chair = barbershop.getChair();
+        final BarberWaitingRoom room = barbershop.getWaitingRoom();
+
         do {
             final BarberCustomer customer = generator.generate();
             System.out.printf("%s is coming...\n", customer);
 
-            if (!customer.tryToSitOnChair(barbershop.getChair())) {
-                if (!barbershop.getRoom().getLine().offer(customer)) {
+            if (!customer.tryToSitOnTheChair(chair)) {
+                if (customer.tryToJoinTheLine(room.getLine())) {
                     System.out.println("I can't stand it! I am leaving!");
+                } else {
+                    System.out.println();
                 }
             }
 

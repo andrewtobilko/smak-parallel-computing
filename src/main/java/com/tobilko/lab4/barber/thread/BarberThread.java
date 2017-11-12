@@ -28,10 +28,10 @@ public final class BarberThread extends Thread {
             final BarberCustomer customer;
             try {
 
-                if (barbershop.getRoom().isEmpty()) {
+                if (barbershop.getWaitingRoom().isEmpty()) {
                     // TODO: 11/11/17  get a lock from barbershop and subscribe on the condition
                 }
-                customer = barbershop.getBarber().tryToCallInCustomerFromWaitingRoom(barbershop.getRoom());
+                customer = barbershop.getBarber().tryToCallInCustomerFromWaitingRoom(barbershop.getWaitingRoom());
                 try {
                     barbershop.getBarber().makeHaircut(customer);
                 } catch (InterruptedException e) {

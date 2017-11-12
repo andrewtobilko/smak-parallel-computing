@@ -18,15 +18,15 @@ public final class BarberChair {
         return currentCustomer == null;
     }
 
-    public void setCurrentCustomer(BarberCustomer currentCustomer) throws InterruptedException {
+    public void setCurrentCustomer(BarberCustomer currentCustomer) {
         this.currentCustomer = currentCustomer;
         notifyBarberAboutCondition();
     }
 
-    private void notifyBarberAboutCondition() throws InterruptedException {
+    private void notifyBarberAboutCondition() {
         final Lock lock = lockWithCondition.getLock();
 
-        lock.lockInterruptibly();
+        lock.lock();
         try {
             lockWithCondition.getCondition().signal();
         } finally {

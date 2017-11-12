@@ -21,7 +21,7 @@ public final class Barbershop {
 
     private final BarberChair chair;
     private final Barber barber;
-    private final BarberWaitingRoom room;
+    private final BarberWaitingRoom waitingRoom;
 
     public static Barbershop createStandardBarbershop() {
         // TODO: 11/11/17 ??? 2
