@@ -4,9 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-
 /**
  * Created by Andrew Tobilko on 11/11/17.
  */
@@ -15,10 +12,7 @@ public final class BarberChair {
 
     @Getter
     @Setter
-    private volatile BarberCustomer currentCustomer;
-
-    @Getter
-    private final ChairLock chairLock;
+    private BarberCustomer currentCustomer;
 
     public boolean isFree() {
         return currentCustomer == null;
@@ -28,12 +22,4 @@ public final class BarberChair {
         currentCustomer = null;
     }
 
-    @Getter
-    @RequiredArgsConstructor(staticName = "of")
-    public static class ChairLock {
-
-        private final Lock lock;
-        private final Condition chairOccupied;
-
-    }
 }
