@@ -26,7 +26,7 @@ public final class Barbershop {
         final Lock lock = new ReentrantLock();
 
         return new Barbershop(
-                new BarberChair(),
+                new BarberChair(getRandomId()),
                 new Barber(getRandomId(), getRandomTimeInSeconds()),
                 BarberWaitingRoom.of(new ArrayBlockingQueue<>(WAITING_ROOM_CAPACITY)),
                 BarberLock.of(lock, lock.newCondition())

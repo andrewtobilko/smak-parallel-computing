@@ -4,8 +4,6 @@ import com.tobilko.lab2.util.Identifiable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.concurrent.BlockingQueue;
-
 import static java.lang.String.format;
 
 /**
@@ -16,31 +14,6 @@ import static java.lang.String.format;
 public final class BarberCustomer implements Identifiable<Integer> {
 
     private final Integer id;
-
-    public boolean tryToSitOnTheChair(BarberChair chair) {
-        logChairAttempt();
-
-        if (chair.isFree()) {
-            chair.setCurrentCustomer(this);
-            return true;
-        }
-
-        return false;
-    }
-
-    private void logChairAttempt() {
-        System.out.printf("\t\t%s is trying to sit on the chair...\n", this);
-    }
-
-    public boolean tryToJoinTheLine(BlockingQueue<BarberCustomer> line) {
-        logLineAttempt();
-
-        return line.offer(this);
-    }
-
-    private void logLineAttempt() {
-        System.out.printf("\t\t%s is trying to join the line...\n", this);
-    }
 
     @Override
     public String toString() {

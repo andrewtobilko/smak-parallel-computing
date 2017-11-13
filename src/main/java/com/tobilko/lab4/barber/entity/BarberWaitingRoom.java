@@ -14,8 +14,4 @@ public final class BarberWaitingRoom {
     @Getter
     private final BlockingQueue<BarberCustomer> line;
 
-    public boolean isEmpty() {
-        return line.isEmpty();
-    }
-
 }

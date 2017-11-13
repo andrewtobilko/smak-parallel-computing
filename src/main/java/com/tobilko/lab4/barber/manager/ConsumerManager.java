@@ -7,7 +7,6 @@ import com.tobilko.lab4.barber.entity.BarberWaitingRoom;
 import com.tobilko.lab4.barber.entity.Barbershop;
 import lombok.RequiredArgsConstructor;
 
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 import static com.tobilko.lab2.util.RandomUtil.getRandomId;
@@ -29,36 +28,57 @@ public final class ConsumerManager implements Runnable {
         final BarberChair chair = barbershop.getChair();
         final BarberWaitingRoom room = barbershop.getWaitingRoom();
 
-        final Lock lock = barbershop.getBarberLock().getLock();
-        final Condition newCustomerArrived = barbershop.getBarberLock().getNewCustomerArrived();
-
         do {
             final BarberCustomer customer = generator.generate();
-            System.out.printf("%s is coming...\n", customer);
+            logCustomerComing(customer);
 
             // try to occupy the chair
-            lock.lock();
-            try {
-                if (chair.isFree()) {
-                    System.out.println("the chair is free!! NOTIFYING THE BARBER!!");
-                    chair.setCurrentCustomer(customer);
-                    newCustomerArrived.signal();
-                    continue;
-                }
-            } finally {
-                lock.unlock();
+            if (tryToSeatCustomerOnChair(customer)) {
+                continue;
             }
 
             // try to join the line or quit
-            if (customer.tryToJoinTheLine(room.getLine())) {
-                System.out.printf("\t\t\t%s joined the line.\n", customer);
+            if (room.getLine().offer(customer)) {
+                logCustomerJoinedLine(customer);
             } else {
-                System.err.printf("\t\t\tNo free chairs in the waiting room. %s is leaving...\n", customer);
+                logCustomerLeft(customer);
             }
 
             simulateClientDelay();
         } while (getNumberOfClientsExpected().decrementAndGet() > 0);
 
+    }
+
+    private void logCustomerComing(BarberCustomer customer) {
+        System.out.printf("%s is coming...\n", customer);
+    }
+
+    private void logCustomerJoinedLine(BarberCustomer customer) {
+        System.out.printf("\t\t\t%s joined the line.\n", customer);
+    }
+
+    private void logCustomerLeft(BarberCustomer customer) {
+        System.err.printf("\t\t\tThere is no free chairs in the waiting room. %s is leaving...\n", customer);
+    }
+
+    private boolean tryToSeatCustomerOnChair(BarberCustomer customer) {
+        final Lock lock = barbershop.getBarberLock().getLock();
+        final BarberChair chair = barbershop.getChair();
+
+        lock.lock();
+        try {
+            if (barbershop.getChair().isFree()) {
+                System.out.printf("%s has taken the chair and notified the barber.\n", customer);
+                chair.setCurrentCustomer(customer);
+                barbershop.getBarberLock().getNewCustomerArrived().signal();
+
+                return true;
+            }
+        } finally {
+            lock.unlock();
+        }
+
+        return false;
     }
 
     private static class ConsumerGenerator implements Generator<BarberCustomer> {

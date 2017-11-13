@@ -3,10 +3,8 @@ package com.tobilko.lab4.barber.entity;
 import com.tobilko.lab2.util.Identifiable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
 
 import static java.lang.String.format;
 
@@ -22,17 +20,19 @@ public final class Barber implements Identifiable<Integer> {
 
     public void makeHaircut(BarberCustomer customer) {
         logCustomer(customer);
+        emulateMakingHaircut();
+    }
 
-        // make a haircut
+    private void logCustomer(BarberCustomer customer) {
+        System.out.printf("%s is cutting %s's hair...\n", this, customer);
+    }
+
+    private void emulateMakingHaircut() {
         try {
             TimeUnit.SECONDS.sleep(haircutTime);
         } catch (InterruptedException e) {
             logBarberInterruption();
         }
-    }
-
-    private void logCustomer(BarberCustomer customer) {
-        System.out.printf("%s is cutting %s's hair...\n", this, customer);
     }
 
     private void logBarberInterruption() {
