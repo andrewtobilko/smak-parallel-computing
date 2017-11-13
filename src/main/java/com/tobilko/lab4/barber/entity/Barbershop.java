@@ -26,7 +26,7 @@ public final class Barbershop {
         final BarberLock lock = BarberLock.of(chairLock, chairLock.newCondition());
 
         return new Barbershop(
-                new BarberChair(lock),
+                new BarberChair(),
                 new Barber(getRandomId(), getRandomTimeInSeconds()),
                 BarberWaitingRoom.of(new ArrayBlockingQueue<>(WAITING_ROOM_CAPACITY)),
                 lock

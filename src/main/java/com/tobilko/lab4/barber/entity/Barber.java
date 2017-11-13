@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
-import static com.tobilko.lab4.barber.util.BarberUtil.TIME_TO_WAIT_FOR_A_NEW_CUSTOMER_FROM_THE_LINE;
+import java.util.concurrent.locks.Lock;
+
 import static java.lang.String.format;
-import static java.util.concurrent.TimeUnit.MINUTES;
 
 /**
  * Created by Andrew Tobilko on 11/5/17.
@@ -21,17 +21,36 @@ public final class Barber implements Identifiable<Integer> {
 
     public void makeHaircut(BarberCustomer customer, BarberChair chair) throws InterruptedException {
         logCustomer(customer);
+
+        final Lock lock = chair.getChairLock().getLock();
+
+        // check chair availability
+        lock.lock();
+        try {
+            if (!chair.isFree()) {
+                throw new IllegalArgumentException("The chair is already occupied.");
+            }
+
+            chair.setCurrentCustomer(customer);
+        } finally {
+            lock.unlock();
+        }
+
+        // make a haircut
         Thread.sleep(haircutTime * 2000);
-        freeChairFromCustomer(chair, customer);
+
+        // say goodbye to the customer
+        lock.lock();
+        try {
+            chair.getChairFree();
+        } finally {
+            lock.unlock();
+        }
+
     }
 
     private void logCustomer(BarberCustomer customer) {
         System.out.printf("%s is cutting %s's hair...\n", this, customer);
-    }
-
-    private void freeChairFromCustomer(BarberChair chair, BarberCustomer customer) {
-        chair.getChairFree();
-        logGettingChairFree(customer);
     }
 
     private void logGettingChairFree(BarberCustomer customer) {
@@ -40,7 +59,7 @@ public final class Barber implements Identifiable<Integer> {
 
     @SneakyThrows
     public BarberCustomer tryToCallInCustomerFromWaitingRoom(BarberWaitingRoom room) {
-        return room.getLine().poll(TIME_TO_WAIT_FOR_A_NEW_CUSTOMER_FROM_THE_LINE, MINUTES);
+        return room.getLine().poll();
     }
 
     @Override
