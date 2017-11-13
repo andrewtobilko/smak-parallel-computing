@@ -12,8 +12,11 @@ public final class Application {
     public static void main(String[] args) {
         final Barbershop barbershop = Barbershop.createStandardBarbershop();
 
-        new Thread(new BarberManager(barbershop)).start();
-        new Thread(new ConsumerManager(barbershop)).start();
+        final BarberManager barberManager = new BarberManager(barbershop);
+        final ConsumerManager consumerManager = new ConsumerManager(barbershop);
+
+        new Thread(barberManager).start();
+        new Thread(consumerManager).start();
     }
 
 }
