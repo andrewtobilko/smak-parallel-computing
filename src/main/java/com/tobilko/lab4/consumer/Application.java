@@ -20,8 +20,8 @@ public final class Application {
         final Lock lock = new ReentrantLock();
         final Deque<Item> deque = new LinkedList<>(); // TODO: 11/15/17 choose the impl
 
-        new Thread(new ConsumerRunnable(deque)).start();
-        new Thread(new ProducerRunnable(deque)).start();
+        new Thread(new ConsumerRunnable(lock, deque)).start();
+        new Thread(new ProducerRunnable(lock, deque)).start();
 
     }
 

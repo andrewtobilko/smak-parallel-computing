@@ -22,13 +22,11 @@ public final class Application {
         // initialise folks
         for (int i = 0; i < folks.length; ++i) {
             folks[i] = new Folk(getRandomId());
-            System.out.printf("%s has been generated!\n", folks[i]);
         }
 
         // initialise philosophers
         for (int i = 0; i < philosophers.length; ++i) {
             philosophers[i] = new Philosopher(getRandomId(), calculateFolkPairForPhilosopherByIndex(i, folks));
-            System.out.printf("%s has been generated!\n", philosophers[i]);
         }
 
         // start philosopher threads
