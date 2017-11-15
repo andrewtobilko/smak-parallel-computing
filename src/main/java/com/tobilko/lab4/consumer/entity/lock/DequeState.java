@@ -5,7 +5,7 @@ package com.tobilko.lab4.consumer.entity.lock;
  */
 public enum DequeState {
 
-    EMPTY,
-    FULL
+    NOT_EMPTY,
+    NOT_FULL
 
 }

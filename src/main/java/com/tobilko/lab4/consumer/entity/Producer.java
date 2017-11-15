@@ -27,6 +27,11 @@ public final class Producer implements Identifiable<Integer> {
         System.out.printf("Someone interrupted %s while he was producing an item...\n", this);
     }
 
+    @Override
+    public String toString() {
+        return getFormattedString();
+    }
+
     private final static class ProducerGenerator {
 
         public Item generate() {

@@ -23,4 +23,9 @@ public final class Consumer implements Identifiable<Integer> {
         System.out.printf("Someone interrupted %s while he was consuming %s...\n", this, item);
     }
 
+    @Override
+    public String toString() {
+        return getFormattedString();
+    }
+
 }

@@ -19,6 +19,8 @@ import static com.tobilko.lab2.util.RandomUtil.getRandomId;
  */
 public final class Application {
 
+    public static final int MAX_DEQUE_SIZE = 5;
+
     public static void main(String[] args) {
 
         // init a consumer + a producer
@@ -28,8 +30,8 @@ public final class Application {
         // init a lock + conditions
         final Lock lock = new ReentrantLock();
         final CompositeLock<DequeState> compositeLock = CompositeLock.of(lock, ImmutableMap.of(
-                DequeState.EMPTY, lock.newCondition(),
-                DequeState.FULL, lock.newCondition())
+                DequeState.NOT_EMPTY, lock.newCondition(),
+                DequeState.NOT_FULL, lock.newCondition())
         );
 
         // init a deque
