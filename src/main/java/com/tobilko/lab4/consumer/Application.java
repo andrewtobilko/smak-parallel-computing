@@ -1,7 +1,9 @@
 package com.tobilko.lab4.consumer;
 
 import com.google.common.collect.ImmutableMap;
-import com.tobilko.lab4.consumer.entity.*;
+import com.tobilko.lab4.consumer.entity.Consumer;
+import com.tobilko.lab4.consumer.entity.Item;
+import com.tobilko.lab4.consumer.entity.Producer;
 import com.tobilko.lab4.consumer.entity.lock.CompositeLock;
 import com.tobilko.lab4.consumer.entity.lock.DequeState;
 import com.tobilko.lab4.consumer.runnable.ConsumerRunnable;

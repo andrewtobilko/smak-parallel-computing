@@ -1,8 +1,8 @@
 package com.tobilko.lab4.consumer.runnable;
 
-import com.tobilko.lab4.consumer.entity.lock.CompositeLock;
 import com.tobilko.lab4.consumer.entity.Item;
 import com.tobilko.lab4.consumer.entity.Producer;
+import com.tobilko.lab4.consumer.entity.lock.CompositeLock;
 import com.tobilko.lab4.consumer.entity.lock.DequeState;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -29,37 +29,56 @@ public final class ProducerRunnable implements Runnable {
     @Override
     @SneakyThrows
     public void run() {
-        final Lock lock = compositeLock.getLock();
-        final Condition dequeNotFullCondition = compositeLock.getConditions().get(NOT_FULL);
-        final Condition dequeNotEmptyCondition = compositeLock.getConditions().get(NOT_EMPTY);
 
-        while(true) {
+        while (true) {
             // validate the size of the deque
-            lock.lock();
-            try {
-                if (deque.size() == MAX_DEQUE_SIZE) {
-                    System.out.printf("%s: I am waiting for the time when I can put an item into the deque...\n", producer);
-                    dequeNotFullCondition.await();
-                }
-            } finally {
-                lock.unlock();
-            }
+            validateDequeSize();
 
             // generate a new item
             final Item item = producer.produce();
 
             // put the generated item into the deque
-            lock.lock();
-            try {
-
-                deque.addLast(item);
-                System.out.printf("%s: I have added %s to the deque.\n", producer, item);
-                dequeNotEmptyCondition.signal();
-            } finally {
-                lock.unlock();
-            }
+            putItemIntoDeque(item);
         }
 
+    }
+
+    @SneakyThrows(InterruptedException.class)
+    private void validateDequeSize() {
+        final Lock lock = compositeLock.getLock();
+        final Condition dequeNotFullCondition = compositeLock.getConditions().get(NOT_FULL);
+
+        lock.lock();
+        try {
+            if (deque.size() == MAX_DEQUE_SIZE) {
+                logWaitingForNotFullDeque();
+                dequeNotFullCondition.await();
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private void putItemIntoDeque(Item item) {
+        final Lock lock = compositeLock.getLock();
+        final Condition dequeNotEmptyCondition = compositeLock.getConditions().get(NOT_EMPTY);
+
+        lock.lock();
+        try {
+            deque.addLast(item);
+            logAddingItemToDeque(item);
+            dequeNotEmptyCondition.signal();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private void logWaitingForNotFullDeque() {
+        System.out.printf("%s: I'm waiting for the time when I can put an item into the deque...\n", producer);
+    }
+
+    private void logAddingItemToDeque(Item item) {
+        System.out.printf("%s: I've added %s to the deque.\n", producer, item);
     }
 
 }
