@@ -17,7 +17,9 @@ public final class ProducerRunnable implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("ProducerRunnable");
+
+
+
     }
 
 }

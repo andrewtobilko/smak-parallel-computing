@@ -17,7 +17,7 @@ public final class ConsumerRunnable implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("ConsumerRunnable");
+
     }
 
 }
