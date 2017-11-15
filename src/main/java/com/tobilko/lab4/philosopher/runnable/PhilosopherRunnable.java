@@ -1,5 +1,6 @@
-package com.tobilko.lab4.philosopher;
+package com.tobilko.lab4.philosopher.runnable;
 
+import com.tobilko.lab4.philosopher.entity.Philosopher;
 import lombok.RequiredArgsConstructor;
 
 /**

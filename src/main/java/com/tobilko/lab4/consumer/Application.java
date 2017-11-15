@@ -6,7 +6,7 @@ package com.tobilko.lab4.consumer;
 public final class Application {
 
     public static void main(String[] args) {
-
+        // TODO: 11/15/17 ReentrantLock
     }
 
 }

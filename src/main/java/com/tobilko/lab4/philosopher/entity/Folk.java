@@ -1,4 +1,4 @@
-package com.tobilko.lab4.philosopher;
+package com.tobilko.lab4.philosopher.entity;
 
 import com.tobilko.lab2.util.Identifiable;
 import lombok.Getter;
