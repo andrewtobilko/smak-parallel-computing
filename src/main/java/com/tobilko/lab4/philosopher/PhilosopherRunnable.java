@@ -12,7 +12,10 @@ public class PhilosopherRunnable implements Runnable {
 
     @Override
     public void run() {
-        philosopher.think();
+        while (true) {
+            philosopher.think();
+            philosopher.tryToEat();
+        }
     }
 
 }

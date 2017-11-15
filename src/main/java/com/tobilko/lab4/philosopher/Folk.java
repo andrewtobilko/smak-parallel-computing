@@ -13,4 +13,9 @@ public final class Folk implements Identifiable<Integer> {
 
     private final Integer id;
 
+    public String toString() {
+        return getFormattedString();
+    }
+
 }
+
