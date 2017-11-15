@@ -28,15 +28,19 @@ public final class Philosopher implements Identifiable<Integer> {
     }
 
     private void logEatingInterruption() {
-        System.err.printf("Someone interrupted %s while he was eating...");
+        System.err.printf("Someone interrupted %s while he was eating...\n", this);
     }
 
     public void think() {
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
-            System.err.println("");
+            logThinkingInterruption();
         }
+    }
+
+    private void logThinkingInterruption() {
+        System.err.printf("Someone interrupted %s while he was eating...\n", this);
     }
 
     @Override
