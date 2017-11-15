@@ -6,5 +6,7 @@ repositories {
 
 dependencies {
     compile 'org.projectlombok:lombok:1.16.18'
-    compile 'one.util:streamex:0.6.6'
+    compile 'one.util:streamex:0.6.6',
+            'com.google.guava:guava:23.0'
+
 }
