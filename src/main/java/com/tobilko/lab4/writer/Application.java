@@ -1,15 +1,12 @@
 package com.tobilko.lab4.writer;
 
-import com.tobilko.lab4.writer.entity.Reader;
-import com.tobilko.lab4.writer.entity.Writer;
+import com.tobilko.lab4.writer.entity.Book;
+import com.tobilko.lab4.writer.entity.BookUnderControl;
 import com.tobilko.lab4.writer.runnable.ReaderRunnable;
 import com.tobilko.lab4.writer.runnable.WriterRunnable;
 import lombok.SneakyThrows;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
 import static com.tobilko.lab2.util.RandomUtil.getRandomId;
 
@@ -18,22 +15,25 @@ import static com.tobilko.lab2.util.RandomUtil.getRandomId;
  */
 public final class Application {
 
-    public static final int PERMITS = 5;
-    public static final int THREADS = 2;
-
+    public static final int PERMITS = 1;
 
     @SneakyThrows
     public static void main(String[] args) {
-        final Semaphore semaphore = new Semaphore(PERMITS);
+        // resource
+        final Book book = new Book(getRandomId());
 
-        final ExecutorService service = Executors.newFixedThreadPool(THREADS);
+        // semaphores
+        final Semaphore readSemaphore = new Semaphore(PERMITS);
+        final Semaphore writeSemaphore = new Semaphore(PERMITS);
+        final Semaphore tryReadSemaphore = new Semaphore(PERMITS);
+        final Semaphore bookSemaphore = new Semaphore(PERMITS);
 
-        service.execute(new ReaderRunnable(new Reader(getRandomId()), semaphore));
-        service.execute(new WriterRunnable(new Writer(getRandomId()), semaphore));
+        // a wrapper over semaphores and a book
+        final BookUnderControl bookUnderControl = BookUnderControl.of(book, bookSemaphore, readSemaphore, writeSemaphore, tryReadSemaphore);
 
-        service.shutdown();
-        service.awaitTermination(1, TimeUnit.SECONDS);
+        // start threads
+        new Thread(new ReaderRunnable(bookUnderControl)).start();
+        new Thread(new WriterRunnable(bookUnderControl)).start();
     }
 
 }
-
