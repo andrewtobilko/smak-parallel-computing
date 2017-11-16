@@ -6,7 +6,10 @@ import com.tobilko.lab4.writer.runnable.ReaderRunnable;
 import com.tobilko.lab4.writer.runnable.WriterRunnable;
 import lombok.SneakyThrows;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import static com.tobilko.lab2.util.RandomUtil.getRandomId;
 
@@ -16,8 +19,8 @@ import static com.tobilko.lab2.util.RandomUtil.getRandomId;
 public final class Application {
 
     public static final int PERMITS = 1;
+    public static final int THREADS = 8;
 
-    @SneakyThrows
     public static void main(String[] args) {
         // resource
         final Book book = new Book(getRandomId());
@@ -32,8 +35,15 @@ public final class Application {
         final BookUnderControl bookUnderControl = BookUnderControl.of(book, bookSemaphore, readSemaphore, writeSemaphore, tryReadSemaphore);
 
         // start threads
-        new Thread(new ReaderRunnable(bookUnderControl)).start();
-        new Thread(new WriterRunnable(bookUnderControl)).start();
+        final ExecutorService service = Executors.newFixedThreadPool(THREADS);
+
+        for (int i = 0; i < THREADS / 2; i++) {
+            service.execute(new ReaderRunnable(bookUnderControl));
+            service.execute(new WriterRunnable(bookUnderControl));
+        }
+
+        service.shutdown();
+
     }
 
 }

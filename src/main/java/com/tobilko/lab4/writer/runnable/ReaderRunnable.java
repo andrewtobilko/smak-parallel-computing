@@ -11,6 +11,8 @@ import lombok.SneakyThrows;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.tobilko.lab4.consumer.util.SleepUtil.sleepRandomSeconds;
+
 /**
  * Created by Andrew Tobilko on 11/15/17.
  */
@@ -18,8 +20,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class ReaderRunnable implements Runnable {
 
     private final ReaderGenerator readerGenerator = new ReaderGenerator();
-    private final AtomicInteger readCount = new AtomicInteger();
-
     private final BookUnderControl bookUnderControl;
 
     @Override
@@ -32,7 +32,10 @@ public final class ReaderRunnable implements Runnable {
         final Semaphore readSemaphore = bookUnderControl.getReadSemaphore();
         final Semaphore tryReadSemaphore = bookUnderControl.getTryReadSemaphore();
 
+        final AtomicInteger readCount = bookUnderControl.getReadCount();
+
         while(true) {
+            final Reader reader = readerGenerator.generate();
 
             // ENTRY SECTION
             tryReadSemaphore.acquire();     // the reader is trying to enter
@@ -46,8 +49,8 @@ public final class ReaderRunnable implements Runnable {
             tryReadSemaphore.release();
 
             // CRITICAL SECTION
-            readerGenerator.generate().readFrom(book);
-
+            reader.readFrom(book);
+            System.out.printf("%s read the book.\n", reader);
 
             // EXIT SECTION
             // avoid race condition with readers
@@ -68,7 +71,12 @@ public final class ReaderRunnable implements Runnable {
 
         @Override
         public Reader generate() {
+            sleepRandomSeconds(this::logInterruption);
             return new Reader(RandomUtil.getRandomId());
+        }
+
+        private void logInterruption() {
+            System.out.println("Someone interrupted the generator while he was generating...");
         }
 
         @Override

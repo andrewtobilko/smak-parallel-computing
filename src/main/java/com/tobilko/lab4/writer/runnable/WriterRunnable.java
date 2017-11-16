@@ -11,6 +11,8 @@ import lombok.SneakyThrows;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.tobilko.lab4.consumer.util.SleepUtil.sleepRandomSeconds;
+
 /**
  * Created by Andrew Tobilko on 11/15/17.
  */
@@ -18,8 +20,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class WriterRunnable implements Runnable {
 
     private final WriterGenerator writerGenerator = new WriterGenerator();
-    private final AtomicInteger writeCount = new AtomicInteger();
-
     private final BookUnderControl bookUnderControl;
 
     @Override
@@ -32,7 +32,10 @@ public class WriterRunnable implements Runnable {
         final Semaphore writeSemaphore = bookUnderControl.getWriteSemaphore();
         final Semaphore tryReadSemaphore = bookUnderControl.getTryReadSemaphore();
 
+        final AtomicInteger writeCount = bookUnderControl.getWriteCount();
+
         while (true) {
+            final Writer writer = writerGenerator.generate();
             // ENTRY SECTION
             // avoid race conditions between writers
             writeSemaphore.acquire();
@@ -47,7 +50,10 @@ public class WriterRunnable implements Runnable {
             // CRITICAL SECTION
             // acquire only for yourself
             bookSemaphore.acquire();
-            writerGenerator.generate().writeTo(book);
+
+            writer.writeTo(book);
+            System.out.printf("%s wrote something to the book.\n", writer);
+
             bookSemaphore.release();
 
 
@@ -68,7 +74,12 @@ public class WriterRunnable implements Runnable {
 
         @Override
         public Writer generate() {
+            sleepRandomSeconds(this::logInterruption);
             return new Writer(RandomUtil.getRandomId());
+        }
+
+        private void logInterruption() {
+            System.out.println("Someone interrupted the generator while he was generating...");
         }
 
         @Override

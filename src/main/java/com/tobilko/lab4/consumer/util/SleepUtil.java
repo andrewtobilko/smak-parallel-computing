@@ -21,4 +21,12 @@ public final class SleepUtil {
         }
     }
 
+    public static void sleepForShortTime(Runnable failureRunnable) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            failureRunnable.run();
+        }
+    }
+
 }
