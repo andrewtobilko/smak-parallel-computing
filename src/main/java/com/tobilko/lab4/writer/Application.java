@@ -4,12 +4,10 @@ import com.tobilko.lab4.writer.entity.Book;
 import com.tobilko.lab4.writer.entity.BookUnderControl;
 import com.tobilko.lab4.writer.runnable.ReaderRunnable;
 import com.tobilko.lab4.writer.runnable.WriterRunnable;
-import lombok.SneakyThrows;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
 import static com.tobilko.lab2.util.RandomUtil.getRandomId;
 
