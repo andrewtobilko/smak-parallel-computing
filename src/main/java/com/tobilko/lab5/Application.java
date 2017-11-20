@@ -1,6 +1,8 @@
 package com.tobilko.lab5;
 
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Created by Andrew Tobilko on 11/15/17.
@@ -18,7 +20,7 @@ public final class Application {
         };
         final int[] rightMatrix = {5, 8, 2};
 
-        printMatrix(leftMatrix, "before");
+        printAugmentedMatrix(leftMatrix, rightMatrix,"before");
 
 
         // 2. Use row operations to transform the augmented matrix in the form described below, which is
@@ -26,22 +28,25 @@ public final class Application {
 
         for (int rowIndex = 1; rowIndex < leftMatrix.length; ++rowIndex) {
             for (int columnIndex = 0; columnIndex < leftMatrix[rowIndex].length; ++columnIndex) {
-                // leftMatrix[rowIndex][columnIndex] = leftMatrix[rowIndex][columnIndex] - leftMatrix[rowIndex - 1][0] *
+                leftMatrix[rowIndex][columnIndex] = leftMatrix[rowIndex][columnIndex] - leftMatrix[rowIndex - 1][0] * 2;
             }
-            // leftMatrix[i][j] =
-            printMatrix(leftMatrix, "step " + rowIndex);
+            printAugmentedMatrix(leftMatrix, rightMatrix,"step " + rowIndex);
         }
 
 
-        printMatrix(leftMatrix, "after");
+        printAugmentedMatrix(leftMatrix,rightMatrix, "after");
     }
 
-    public static void printMatrix(int[][] matrix, String title) {
+    public static void printAugmentedMatrix(int[][] matrix, int[] row, String title) {
         System.out.println(title);
 
-        for (int[] ints : matrix) {
-            System.out.println(Arrays.toString(ints));
+        for (int i = 0; i < matrix.length; ++i) {
+            System.out.printf("%s\t%d\n", getRowString(matrix[i]), row[i]);
         }
+    }
+
+    private static String getRowString(int[] row) {
+        return IntStream.of(row).mapToObj(String::valueOf).collect(Collectors.joining(" "));
     }
 
 }
