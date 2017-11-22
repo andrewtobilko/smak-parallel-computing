@@ -9,5 +9,5 @@ dependencies {
             'one.util:streamex:0.6.6',
             'com.google.guava:guava:23.0'
 
-    testCompile("junit:junit:4.12")
+    testCompile 'junit:junit:4.12'
 }
