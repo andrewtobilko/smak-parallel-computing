@@ -1,5 +1,11 @@
 package com.tobilko.lab5;
 
+import lombok.SneakyThrows;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import static java.lang.Math.abs;
 
 /**
@@ -11,6 +17,7 @@ import static java.lang.Math.abs;
 public class GaussJordanElimination {
 
     private final double EPSILON = 1e-8;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     private final int N;
     private double[][] A;
@@ -40,6 +47,7 @@ public class GaussJordanElimination {
         }
     }
 
+    @SneakyThrows
     private void solve() {
         for (int p = 0; p < N; ++p) {
 
@@ -59,8 +67,12 @@ public class GaussJordanElimination {
             }
 
             // pivot
-            pivot(p, p);
+            final int P = p;
+            executorService.execute(() -> pivot(P, P));
         }
+
+        executorService.awaitTermination(1, TimeUnit.SECONDS);
+
     }
 
     private void swapRowsByIndices(int rowIndex1, int rowIndex2) {
@@ -71,33 +83,37 @@ public class GaussJordanElimination {
 
     private void pivot(int p, int q) {
 
-        // everything but row p and column q
         for (int i = 0; i < N; i++) {
-            double alpha = A[i][q] / A[p][q];
+            synchronized (A[i]) {
+                synchronized (A[p]) {
+                    double alpha = A[i][q] / A[p][q];
+                    for (int j = 0; j <= N; j++) {
+                        if (i != p && j != q) A[i][j] -= alpha * A[p][j];
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            synchronized (A[i]) {
+                if (i != p) {
+                    A[i][q] = 0.0;
+                }
+            }
+        }
+
+        synchronized (A[p]) {
             for (int j = 0; j <= N; j++) {
-                if (i != p && j != q) A[i][j] -= alpha * A[p][j];
+                if (j != q) {
+                    A[p][j] /= A[p][q];
+                }
             }
+            A[p][q] = 1.0;
         }
-
-        // zero out column q
-        for (int i = 0; i < N; i++) {
-            if (i != p) {
-                A[i][q] = 0.0;
-            }
-        }
-
-        // scale row p (ok to go from q+1 to N, but do this for consistency with simplex pivot)
-        for (int j = 0; j <= N; j++) {
-            if (j != q) {
-                A[p][j] /= A[p][q];
-            }
-        }
-
-        A[p][q] = 1.0;
     }
 
     public double[] extractSolution() {
-        double[] x = new double[N];
+        final double[] x = new double[N];
 
         for (int i = 0; i < N; i++) {
             if (abs(A[i][i]) > EPSILON) {

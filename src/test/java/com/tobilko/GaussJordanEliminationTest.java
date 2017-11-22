@@ -32,20 +32,6 @@ public final class GaussJordanEliminationTest {
         test(matrix, b);
     }
 
-    @Test
-    public void test3() {
-        double[][] matrix = {
-                {2, -3, -1, 2, 3},
-                {4, -4, -1, 4, 11},
-                {2, -5, -2, 2, -1},
-                {0, 2, 1, 0, 4},
-                {-4, 6, 0, 0, 7},
-        };
-        double[] b = {4, 4, 9, -5, 5};
-
-        test(matrix, b);
-    }
-
     private void test(double[][] A, double[] b) {
         final GaussJordanElimination gaussian = new GaussJordanElimination(A, b);
 
