@@ -25,7 +25,6 @@ public final class ConsumerManager implements Runnable {
     @Override
     public void run() {
 
-        final BarberChair chair = barbershop.getChair();
         final BarberWaitingRoom room = barbershop.getWaitingRoom();
 
         do {

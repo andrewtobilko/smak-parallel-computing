@@ -24,8 +24,6 @@ public final class ConsumerRunnable implements Runnable {
 
     @Override
     public void run() {
-        final Lock lock = compositeLock.getLock();
-        final Condition dequeNotFullCondition = compositeLock.getConditions().get(DequeState.NOT_FULL);
 
         while (true) {
             // validate the size of the deque
